@@ -34,33 +34,6 @@ I don't know if this will be useful to anybody else out there, but it saved my r
 
 ---
 
-## ⚡ The One-Prompt Autonomous Setup (Zero Setup Required)
-
-If you use any AI coding assistant (**Google Antigravity**, **Gemini CLI**, **Claude Code**, or **Cursor**), you don't even need to install or configure Python or virtual environments manually. 
-
-Just copy and paste the universal master prompt from [PROMPT.md](PROMPT.md) into your AI assistant:
-
-> *"You are an autonomous engineering agent executing Project LabForge (https://github.com/cid-moosa/labforge). Clone the repository, configure the environment, scan my `input/` folder, map all screenshots to the `.docx` procedure steps using multimodal AI vision, and generate the final teacher-approved `.docx` and verified `.pdf` deliverables inside `output/<lab_folder>/final/`."*
-
-All you have to do is drop your lab folders into `input/` — the AI agent sets up dependencies, maps the screenshots, fixes the formatting bugs, compiles the PDF via LibreOffice, and runs the 5-gate QA audit autonomously!
-
----
-
-### 💻 One-Command Terminal Installers (For Non-AI Users)
-
-If you just want to set up the environment with a single terminal command:
-
-- **Windows (PowerShell):**
-  ```powershell
-  irm https://raw.githubusercontent.com/cid-moosa/labforge/main/install.ps1 | iex
-  ```
-- **Linux / macOS (Bash):**
-  ```bash
-  curl -sSL https://raw.githubusercontent.com/cid-moosa/labforge/main/install.sh | bash
-  ```
-
----
-
 ## 🏛️ The 4-Stage Core Architecture
 
 ```mermaid

@@ -18,21 +18,19 @@ LabForge functions both as a **standalone Python CLI tool** and as an **autonomo
 
 ---
 
-## 🎓 The Story Behind LabForge (Why I Built This)
+## 🎓 The Story Behind LabForge
 
-Every student knows the drill during practical lab sessions:
-1. While doing the practicals, you take dozens of screenshots for your lab record.
-2. Later, the teacher gives you the standard practical record template (`.docx`).
-3. You have to manually paste, resize, and align every screenshot into the document under each procedure step.
+It all started during our practical lab sessions in college. While running forensic tools, carving disk images, and typing commands into terminal windows, we’d capture dozens of screenshots as proof of our work. A few days later, our teacher would hand us the official practical record template and ask us to submit the completed document.
 
-**Why did I build this?**
-- **Honestly? Because I am lazy.** Spending entire weekends manually formatting dozens of lab records in Word was exhausting.
-- **And worse:** Every time I formatted the document manually, it got **rejected by the teacher** due to broken alignments — step numbers pushed into the middle of the page with huge tab gaps, dialog boxes squeezed until unreadable, missing paragraph spacing, and steps stranded at the bottom of pages.
+As an avid open-source enthusiast, I do everything on Linux with LibreOffice Writer rather than proprietary software. But sitting down to manually insert, crop, and align dozens of screenshots across multiple lab exercises was pure agony. Honestly, part of me was just lazy—I didn't want to spend entire weekends wrestling with image anchor settings, paragraph margins, and list indents.
 
-So I engineered **LabForge** to solve this once and for all:
-Now, all you do is create folders like `lab 1`, `lab 2`, `lab 4`, drop the teacher's `.docx` template and your screenshots inside, and LabForge automatically aligns all screenshots with teacher-approved OpenXML layout rules. It outputs clean final PDFs in `lab 1/final/`, `lab 2/final/`, etc., with zero manual effort!
+To make matters worse, every time I manually aligned the document and exported the PDF, my teacher rejected it. The layout was always broken: list numbering pushed step numbers two inches into the middle of the page with awkward tab gaps, square dialog boxes were squeezed into unreadable thumbnails, headings were pressed right against preceding images with zero whitespace, and procedure steps sat stranded at the bottom of pages while their screenshots jumped to the next.
 
-I didn't think this would be useful to anybody else, but it saved my sanity — so this project is **dedicated to my friends, future students who have to survive lab submissions, and fellow nerds like me!** 🚀
+I got tired of the repeated rejections and manual alignment headaches, so I decided to solve it the hacker way: by building an automation engine to do all the heavy lifting.
+
+With LabForge, the workflow is dead simple. I just create folders named `lab 1`, `lab 2`, `lab 4`, drop the teacher’s `.docx` template and my raw screenshots inside, and let the engine take over. It uses multimodal AI vision to understand which screenshot belongs to which step, fixes the underlying OpenXML layout with teacher-approved precision, and uses headless LibreOffice to generate the final, beautifully aligned PDF inside a `final/` folder—all with zero manual effort.
+
+I don't know if this will be useful to anybody else out there, but it saved my records and my sanity. This project is built entirely with open-source tools and dedicated to my friends, future students who have to survive practical submissions, and fellow open-source nerds like me! 🚀
 
 ---
 

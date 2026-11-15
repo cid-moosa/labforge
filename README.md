@@ -59,6 +59,53 @@ flowchart LR
 
 ---
 
+## 🔄 How It Works: The Automated Folder-to-Folder Workflow
+
+LabForge eliminates manual copy-pasting through an intuitive, mirrored folder structure. You never have to worry about where your output goes or mess with manual file renaming:
+
+```text
+input/                                              output/
+├── lab 1/                                          ├── lab 1/
+│   ├── IDFT Lab 1 FTK Imager.docx       ───►       │   ├── IDFT Lab 1 FTK Imager - Final.docx
+│   └── screenshots/                                │   └── final/
+│       ├── 1.png, 2.png, ...                       │       └── IDFT Lab 1 FTK Imager - Final.pdf
+├── lab 2/                                          ├── lab 2/
+│   ├── IDFT Lab 2 Autopsy.docx          ───►       │   ├── IDFT Lab 2 Autopsy - Final.docx
+│   └── autopsy images/                             │   └── final/
+│       ├── 1.png, 2.png, ...                       │       └── IDFT Lab 2 Autopsy - Final.pdf
+└── lab 4/                                          └── lab 4/
+    ├── IDFT Lab 4 Guymager.docx         ───►           ├── IDFT Lab 4 Guymager - Final.docx
+    └── guymager images/                                └── final/
+        ├── Screenshot_1.png, ...                           └── IDFT Lab 4 Guymager - Final.pdf
+```
+
+### 📋 The 4-Step User Experience:
+1. **Create Separate Lab Folders in `input/`**:
+   Simply create a folder for each practical experiment (e.g., `input/lab 1`, `input/lab 2`, `input/lab 4`).
+2. **Drop Your Files Inside**:
+   Place the teacher's blank practical record template (`.docx`) and all the raw screenshots you took during the lab into that folder. No need to rename the images or arrange them beforehand.
+3. **Run LabForge**:
+   LabForge automatically scans all folders in `input/`, inspects the procedure steps, uses AI vision to map the right screenshots to each step, and fixes low-level OpenXML layout issues.
+4. **Collect Mirrored Deliverables in `output/`**:
+   LabForge replicates the exact folder structure inside `output/`. The formatted Word document stays in `output/lab <N>/`, and the final, teacher-approved PDF is neatly isolated inside `output/lab <N>/final/`.
+
+---
+
+## ✨ Key Features & Capabilities
+
+- 📁 **Automated Lab Folder Discovery & Mirroring:** Scans `input/` for unbuilt labs, ignores folders without screenshots until you're ready, and outputs cleanly structured folders under `output/<lab_folder>/final/`.
+- 🛡️ **SourceGuard Read-Only Protection:** Source documents and screenshots in `input/` are never overwritten, modified, or deleted.
+- 👁️ **Multimodal AI Vision Targeting:** Intelligently pairs screenshots with document steps by analyzing terminal commands, window headers, and GUI dialogs, discarding transient loading/splash screens.
+- 📐 **Direct OpenXML Layout & Spacing Engine:** Fixes 7 notorious formatting bugs directly in the document's XML—eliminating hanging step tab gaps, unsticking paragraphs from borders, centering screenshots, and preventing split steps.
+- 🖼️ **Aspect-Ratio Smart Bounding Boxes & 1px Borders:** Widescreen terminal windows and square dialog boxes are scaled proportionally and framed in crisp 1px borders so buttons and menus are never clipped.
+- 📄 **Dynamic Headers & Single-Line Footers:** Injects native dynamic Word page numbers (`1 | Page` through `N | Page`), prevents odd/even page header desync, and ensures footer text never wraps across lines.
+- 🖨️ **100% Open-Source PDF Compilation:** Converts documents to publication-grade PDFs via headless LibreOffice without requiring any paid or proprietary software.
+- 🔍 **Automated 5-Gate PDF QA Auditor:** Verifies every generated PDF against 5 strict acceptance criteria before you submit it to your teacher.
+- 📱 **Mobile & Cloud Ready (Google Colab):** Classmates without computers can run the complete pipeline directly on their Android or iPhone in a mobile web browser.
+- 🤖 **Zero-Touch Agentic Integration:** Fully executable via AI agents (Antigravity, Gemini CLI, Claude Code, Cursor) using the `/labforge` slash command.
+
+---
+
 ## 🛠️ The 7 Solved OOXML Layout Bugs
 
 Standard Word automation tools produce broken layouts because Microsoft Word hides formatting overrides in low-level XML. LabForge resolves all 7 root causes:

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "labforge"
 version = "1.0.0"
-description = "Zero-touch autonomous lab record automation engine & AI skill for OOXML alignment, smart image bounding boxes, and verified PDF generation."
+description = "Zero-touch practical lab record automation engine & AI skill: auto-mirrors lab folders, aligns screenshots into docx templates via OOXML, and compiles verified PDFs via LibreOffice."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}

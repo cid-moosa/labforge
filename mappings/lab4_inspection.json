@@ -1,0 +1,206 @@
+{
+  "document": {
+    "path": "input/lab 4/IDFT Lab 4 Guymager.docx",
+    "total_non_empty_paragraphs": 16,
+    "paragraphs": [
+      {
+        "paragraph_index": 0,
+        "style": "Normal",
+        "category": "body",
+        "text": "PRACTICAL-4",
+        "char_count": 11
+      },
+      {
+        "paragraph_index": 3,
+        "style": "Normal",
+        "category": "body",
+        "text": "AIM : Perform forensic image acquisition of the evidence drive provided using Guymager. Tool used : Guymager",
+        "char_count": 108
+      },
+      {
+        "paragraph_index": 4,
+        "style": "Normal",
+        "category": "body",
+        "text": "Guymager is a GUI-based imaging tool available in most Linux forensic distributions such as Kali Linux. Guymager is not a Windows program. It runs only on Linux. It can acquire bit-by-bit images of storage devices and automatically calculates integrity hashes.",
+        "char_count": 260
+      },
+      {
+        "paragraph_index": 5,
+        "style": "Normal",
+        "category": "body",
+        "text": "Steps",
+        "char_count": 5
+      },
+      {
+        "paragraph_index": 6,
+        "style": "Normal",
+        "category": "body",
+        "text": "Open Terminal in ubuntu",
+        "char_count": 23
+      },
+      {
+        "paragraph_index": 8,
+        "style": "Normal",
+        "category": "body",
+        "text": "Launch Guymager as root sudo guymager",
+        "char_count": 37
+      },
+      {
+        "paragraph_index": 12,
+        "style": "Normal",
+        "category": "body",
+        "text": "Guymager lists all connected storage devices. Identify the evidence drive (e.g., /dev/sdb).",
+        "char_count": 91
+      },
+      {
+        "paragraph_index": 15,
+        "style": "Normal",
+        "category": "body",
+        "text": "Right-click on the device you need to image. Choose “Acquire Image.” This will bring up the Acquire Image screen.",
+        "char_count": 113
+      },
+      {
+        "paragraph_index": 18,
+        "style": "Normal",
+        "category": "body",
+        "text": "This will bring up the Acquire Image screen. Add the details for the image. Select the Image Directory choose or create a folder to store the image.",
+        "char_count": 148
+      },
+      {
+        "paragraph_index": 20,
+        "style": "Normal",
+        "category": "body",
+        "text": "Click Start to begin the imaging process.",
+        "char_count": 41
+      },
+      {
+        "paragraph_index": 22,
+        "style": "Normal",
+        "category": "body",
+        "text": "When imaging is complete the acquisition screen will show Finished.",
+        "char_count": 67
+      },
+      {
+        "paragraph_index": 24,
+        "style": "Normal",
+        "category": "body",
+        "text": "Now, you can simply close the Guymager screen and open the directory where you told",
+        "char_count": 83
+      },
+      {
+        "paragraph_index": 25,
+        "style": "Normal",
+        "category": "body",
+        "text": "Guymager to store the image. Here, you'll see two files: the image file (with the suffix .E01 for our file, since we chose Expert Witness Format) and the metadata file (with the suffix",
+        "char_count": 184
+      },
+      {
+        "paragraph_index": 26,
+        "style": "Normal",
+        "category": "body",
+        "text": ".info).",
+        "char_count": 7
+      },
+      {
+        "paragraph_index": 29,
+        "style": "Normal",
+        "category": "output_heading",
+        "text": "OUTPUT",
+        "char_count": 6
+      },
+      {
+        "paragraph_index": 30,
+        "style": "Normal",
+        "category": "body",
+        "text": "Successfully acquired a forensic image of the given evidence drive using Guymager and verified its integrity using generated hash values.",
+        "char_count": 137
+      }
+    ]
+  },
+  "screenshots": {
+    "total_found": 9,
+    "catalog": [
+      {
+        "filename": "Screenshot_2026-10-19_05_36_09.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_36_09.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 112.1
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_37_21.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_37_21.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 128.0
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_37_30.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_37_30.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 130.0
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_39_02.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_39_02.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 136.2
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_40_08.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_40_08.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 176.9
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_40_17.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_40_17.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 154.4
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_49_17.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_49_17.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 148.1
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_49_59.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_49_59.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 139.1
+      },
+      {
+        "filename": "Screenshot_2026-10-19_05_51_28.png",
+        "path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_51_28.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 145.2
+      }
+    ]
+  }
+}

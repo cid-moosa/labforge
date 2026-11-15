@@ -1,0 +1,82 @@
+{
+  "lab_title": "IDFT Lab 2 Autopsy",
+  "source_docx": "input/lab 2/IDFT Lab 2 Autopsy.docx",
+  "page_breaks": [10, 14, 18, 24, 26, 30, 32],
+  "images": [
+    {
+      "after_paragraph_index": 8,
+      "image_path": "input/lab 2/autopsy images/1.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 10,
+      "image_path": "input/lab 2/autopsy images/2.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 12,
+      "image_path": "input/lab 2/autopsy images/5.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 14,
+      "image_path": "input/lab 2/autopsy images/6.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 16,
+      "image_path": "input/lab 2/autopsy images/9.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 20,
+      "image_path": "input/lab 2/autopsy images/11.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 22,
+      "image_path": "input/lab 2/autopsy images/10.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 24,
+      "image_path": "input/lab 2/autopsy images/13.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 24,
+      "image_path": "input/lab 2/autopsy images/15.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 28,
+      "image_path": "input/lab 2/autopsy images/17.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 29,
+      "image_path": "input/lab 2/autopsy images/18.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 30,
+      "image_path": "input/lab 2/autopsy images/19.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 31,
+      "image_path": "input/lab 2/autopsy images/20.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 33,
+      "image_path": "input/lab 2/autopsy images/23.png",
+      "caption": ""
+    },
+    {
+      "after_paragraph_index": 33,
+      "image_path": "input/lab 2/autopsy images/24.png",
+      "caption": ""
+    }
+  ]
+}

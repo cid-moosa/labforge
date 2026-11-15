@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-scripts/sanjaya_engine.py
-Project Sanjaya: Autonomous OOXML Alignment & PDF Generation Engine.
+scripts/labforge_engine.py
+Project LabForge: Autonomous OOXML Alignment & PDF Generation Engine.
 
 Applies all 7 mandatory teacher-grade OOXML rules:
 1. Strips <w:numPr> / <w:tabs> and sets clean left-aligned hanging indentation (0.3" main steps, 0.6" sub-bullets).
@@ -361,7 +361,7 @@ def build_aligned_record(
     output_pdf: Optional[str] = None
 ) -> Tuple[str, Optional[str]]:
     """
-    Executes the full Project Sanjaya alignment pipeline on the given lab record.
+    Executes the full Project LabForge alignment pipeline on the given lab record.
     """
     if not os.path.exists(docx_path):
         raise FileNotFoundError(f"Source docx file not found: {docx_path}")
@@ -777,7 +777,7 @@ def build_aligned_record(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Project Sanjaya: OOXML Alignment and PDF Generation Engine."
+        description="Project LabForge: OOXML Alignment and PDF Generation Engine."
     )
     parser.add_argument(
         "--docx",
@@ -819,7 +819,7 @@ def main():
             output_pdf=pdf_target
         )
     except Exception as e:
-        sys.exit(f"Sanjaya Engine error: {e}")
+        sys.exit(f"LabForge Engine error: {e}")
 
 
 if __name__ == "__main__":

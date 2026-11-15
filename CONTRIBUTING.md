@@ -1,8 +1,8 @@
-# Contributing to Project Brahmastra
+# Contributing to Project LabForge
 
-Thank you for your interest in contributing to **Project Brahmastra**! 
+Thank you for your interest in contributing to **Project LabForge**! 
 
-Project Brahmastra is an autonomous lab record automation engine designed to produce teacher-grade academic records on the first pass without manual formatting adjustments.
+Project LabForge is an autonomous lab record automation engine designed to produce teacher-grade academic records on the first pass without manual formatting adjustments.
 
 ---
 
@@ -10,7 +10,7 @@ Project Brahmastra is an autonomous lab record automation engine designed to pro
 
 When contributing code, mappings, or features, you must uphold the core architectural contracts:
 
-1. **The Kavacha Armor (Zero Text Edits):**
+1. **SourceGuard (Zero Text Edits):**
    - Source documents in `input/` are strictly **READ-ONLY**.
    - Never edit, rewrite, delete, or spellcheck the source text. Formatting must adapt to the text, never the reverse.
 
@@ -27,8 +27,8 @@ When contributing code, mappings, or features, you must uphold the core architec
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/cid-moosa/brahmastra.git
-   cd brahmastra
+   git clone https://github.com/cid-moosa/labforge.git
+   cd labforge
    ```
 
 2. **Create a virtual environment and install dependencies:**
@@ -48,8 +48,8 @@ When contributing code, mappings, or features, you must uphold the core architec
 Run the full end-to-end alignment and PDF verification pipeline:
 
 ```bash
-# 1. Run Brahmastra engine on a lab document:
-python scripts/brahmastra_engine.py --docx "input/lab 1/ftk/IDFT Lab 1 FTK Imager.docx" --mapping "mappings/lab1_map.json" --out "output/lab 1/IDFT Lab 1 FTK Imager - Final.docx"
+# 1. Run LabForge engine on a lab document:
+python scripts/labforge_engine.py --docx "input/lab 1/ftk/IDFT Lab 1 FTK Imager.docx" --mapping "mappings/lab1_map.json" --out "output/lab 1/IDFT Lab 1 FTK Imager - Final.docx"
 
 # 2. Audit generated PDF against the 5 acceptance gates:
 python scripts/verify_pdf.py --pdf "output/lab 1/final/IDFT Lab 1 FTK Imager - Final.pdf" --mapping "mappings/lab1_map.json"

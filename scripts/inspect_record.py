@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 scripts/inspect_record.py
-Project Sanjaya: Read-Only Inspector & Screenshot Cataloger for Lab Records.
+Project LabForge: Read-Only Inspector & Screenshot Cataloger for Lab Records.
 
 Scans input/ for lab folders, extracts non-empty paragraph indices/styles/text
 from .docx templates without modifying source files, and catalogs all screenshots
@@ -138,7 +138,7 @@ def inspect_document(docx_path: str, include_empty: bool = False) -> List[Dict[s
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Project Sanjaya: Inspect .docx record paragraphs and catalog lab screenshots."
+        description="Project LabForge: Inspect .docx record paragraphs and catalog lab screenshots."
     )
     parser.add_argument(
         "--docx",
@@ -177,7 +177,7 @@ def main():
         if args.json:
             print(json.dumps({"labs": labs}, indent=2, ensure_ascii=False))
         else:
-            print("=== Project Sanjaya: Input Directory Scan ===")
+            print("=== Project LabForge: Input Directory Scan ===")
             print(f"Total lab folders found in input/: {len(labs)}\n")
             for lab in labs:
                 print(f"• Folder: {lab['lab_folder']}")
@@ -249,7 +249,7 @@ def main():
     if args.json:
         print(json.dumps(result, indent=2, ensure_ascii=False))
     else:
-        print(f"=== Project Sanjaya: Document Inspection ({os.path.basename(docx_file)}) ===")
+        print(f"=== Project LabForge: Document Inspection ({os.path.basename(docx_file)}) ===")
         print(f"Total non-empty paragraphs: {len(paragraphs)}")
         print(f"Total screenshots cataloged: {len(catalog)}\n")
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 scripts/verify_pdf.py
-Project Sanjaya: QA Verification Auditor for Lab Record PDFs.
+Project LabForge: QA Verification Auditor for Lab Record PDFs.
 
 Audits generated PDFs using PyMuPDF (fitz) against the 4 critical acceptance gates:
 1. Zero blank trailing page (no empty pages at the end).
@@ -213,7 +213,7 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Project Sanjaya: Audit lab record PDF against the 4 acceptance gates."
+        description="Project LabForge: Audit lab record PDF against the 5 acceptance gates."
     )
     parser.add_argument(
         "--pdf",
@@ -243,7 +243,7 @@ def main():
         return
 
     print("=" * 70)
-    print(" PROJECT BRAHMASTRA: PDF QUALITY & ACCEPTANCE AUDIT REPORT")
+    print(" PROJECT LABFORGE: PDF QUALITY & ACCEPTANCE AUDIT REPORT")
     print("=" * 70)
     print(f"Target PDF     : {os.path.basename(report['pdf_path'])}")
     print(f"Total Pages    : {report['total_pages']}")

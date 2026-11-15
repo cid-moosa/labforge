@@ -1,33 +1,34 @@
-# Project Brahmastra: Autonomous Lab Record Automation Standard
+# Project LabForge: Autonomous Lab Record Automation Standard
 
-Project Brahmastra is a permanent, zero-touch lab record automation engine designed to produce teacher-grade B.Sc. Cyber Forensics lab records on the first pass without intermediate test variants.
+Project LabForge is a permanent, zero-touch lab record automation engine designed to produce teacher-grade B.Sc. Cyber Forensics lab records on the first pass without intermediate test variants.
 
-Whenever the user prompts **"Fire Brahmastra"**, **"Run Brahmastra"**, or **"Run Sudarshana"**, execute the entire 4-stage pipeline autonomously—inspecting the `.docx`, viewing screenshots with multimodal vision, generating the mapping, building the final `.docx` and `.pdf` in `output/`, and printing the QA audit report—without asking intermediate questions.
+Whenever the user prompts **"Run LabForge"**, **"Fire LabForge"**, or **"/labforge"**, execute the entire 4-stage pipeline autonomously—inspecting the `.docx`, viewing screenshots with multimodal vision, generating the mapping, building the final `.docx` and `.pdf` in `output/`, and printing the QA audit report—without asking intermediate questions.
 
 ---
 
-## 1. The Divine Weapon Architecture
+## 1. The 4-Stage Core Architecture
 
-1. **Kavacha (The Impenetrable Read-Only Armor):**
+1. **SourceGuard (Immutable Read-Only Protection):**
    - Source files in `input/` (`.docx` templates and screenshots) are strictly **READ-ONLY**.
    - **Zero Text Edits**: Never edit, rewrite, delete, spellcheck, re-word, or reformat any existing text or headings in the source document. The text is sacred and immutable.
 
-2. **Sudarshana (`Su-Darshana` Clear-Vision Targeting Discus):**
+2. **VisionTarget (Multimodal Vision Mapping & Curation):**
    - Uses multimodal AI vision to inspect every raw screenshot in `input/<Lab_Folder>/`.
-   - Reads window titles, active UI dialog tabs, CLI commands, and red highlight boxes to map each image to its exact target `paragraph_index` in the `.docx`.
+   - Reads window titles, active UI dialog tabs, CLI commands, and highlight boxes to map each image to its exact target `paragraph_index` in the `.docx`.
+   - Drops non-essential timeline clutter and loading screens (e.g. transient splash screens), keeping only definitive action/result captures.
 
-3. **Gandiva (The Unerring OOXML Alignment Bow):**
+3. **LayoutEngine (Precision OOXML Alignment Engine):**
    - Operates directly at the OpenXML (`wordprocessingML`) level.
    - Enforces left-aligned hanging step indentations, disables contextual spacing, wraps images in 1px crisp black borders, calculates aspect-ratio bounding boxes, unifies headers/footers, and exports verified `.docx` and `.pdf` files.
 
-4. **Brahmastra (The Master Execution Strike):**
-   - Runs the end-to-end pipeline—from auto-discovering unbuilt lab folders in `input/` to exporting the final `.docx` and `.pdf` in `output/` and auditing the PDF with zero intermediate questions.
+4. **LabForge Core (Autonomous Pipeline & QA Audit):**
+   - Runs the end-to-end pipeline—from auto-discovering unbuilt lab folders in `input/` to exporting the final `.docx` and `.pdf` in `output/<Lab_Folder>/` and auditing the PDF with zero intermediate questions.
 
 ---
 
 ## 2. Root-Cause Post-Mortem & The 7 Mandatory Rules
 
-Every rule below fixes a real Word/PDF layout bug that our teacher or we rejected during earlier drafts:
+Every rule below fixes a real Word/PDF layout bug:
 
 ### Bug 1: The "Step Numbers Hanging in the Middle of the Page" Bug
 - **What went wrong:** In the original `.docx` template, numbered steps (`1.`, `5.`, `9.`) used Word's internal `<w:numPr>` list numbering (`word/numbering.xml`), which pushed the step numbers almost 2 inches toward the center of the page with a huge tab gap before the text (e.g., `9.          Click Start.`). Setting `paragraph_format.left_indent` in `python-docx` did nothing because `<w:numPr>` overrides normal paragraph indents.
@@ -66,7 +67,7 @@ Every rule below fixes a real Word/PDF layout bug that our teacher or we rejecte
 
 ### Bug 5: The "Split Multi-Bullet Step" Bug (Step 6 `a, b, c, d`)
 - **What went wrong:** Step 6 had an intro line (`6. Now select the image type... Select E01.`) followed by `a. Raw(dd)`, `b. SMART`, `c. E01`, `d. AFF`. In an early run, the AI inserted the screenshot right after the intro line, splitting Step 6 above its `a, b, c, d` definitions.
-- **The Mandatory Fix:** During **Sudarshana** vision mapping, whenever a numbered step is followed by sub-bullets (`a, b, c, d`) or explanatory lines belonging to that same step, always map the screenshot **after the final sub-bullet (`d.`)**, and set `keep_with_next = True` on the main step line and all sub-bullets `a` through `d`.
+- **The Mandatory Fix:** During **VisionTarget** vision mapping, whenever a numbered step is followed by sub-bullets (`a, b, c, d`) or explanatory lines belonging to that same step, always map the screenshot **after the final sub-bullet (`d.`)**, and set `keep_with_next = True` on the main step line and all sub-bullets `a` through `d`.
 
 ### Bug 6: The "Tiny Unreadable Screenshots vs. Giant Page-Breaking Screenshots" Bug
 - **What went wrong:**
@@ -88,31 +89,31 @@ Every rule below fixes a real Word/PDF layout bug that our teacher or we rejecte
   1. Set A4 page dimensions (`8.27 in` x `11.69 in`) with `top_margin = Inches(0.90)`, `bottom_margin = Inches(0.85)`, `left_margin = Inches(1.0)`, `right_margin = Inches(0.75)`, `header_distance = Inches(0.45)`, and `footer_distance = Inches(0.40)`.
   2. Set `section.odd_and_even_pages_header_footer = False` and `section.different_first_page_header_footer = False` so the entire document uses ONE unified header and ONE unified footer. Connect `default` header/footer references to non-empty content parts.
   3. Keep the native dynamic Word `PAGE` field (`1 | Page`, `2 | Page`, ... up to the last page) in the top-right header, stripping any hardcoded prefix digits.
-  4. Keep `GIAL Vadavathoor` on the bottom-left footer and `2025\u201129` (using a non-breaking hyphen and expanded textbox to `55pt` at `margin-left: 485pt` / posOffset) on the bottom-right footer so it never splits across two lines.
+  4. Keep institution name on the bottom-left footer and academic year (e.g. `2025\u201129` using a non-breaking hyphen and expanded textbox to `55pt` at `margin-left: 485pt` / posOffset) on the bottom-right footer so it never splits across two lines.
   5. Strip any trailing empty paragraphs at the end of `doc.paragraphs` so no blank extra page is created at the end.
 
 ---
 
-## 3. Autonomous Execution Protocol ("Fire Brahmastra")
+## 3. Autonomous Execution Protocol ("Run LabForge")
 
-When the user says **"Fire Brahmastra"**, **"Run Brahmastra"**, or **"Run Sudarshana"**:
+When the user says **"Run LabForge"**, **"Fire LabForge"**, or **"/labforge"**:
 
-1. **Stage 1: Scan & Inspect Document (Sudarshana):**
+1. **Stage 1: Scan & Inspect Document (VisionTarget):**
    ```powershell
    .venv\Scripts\python.exe scripts/inspect_record.py --dir "input/<Lab_Folder>" --out "mappings/<lab_name>_inspection.json"
    ```
-2. **Stage 2: Multimodal Vision Mapping (Sudarshana):**
+2. **Stage 2: Multimodal Vision Mapping (VisionTarget):**
    - Inspect the raw screenshots and map each to the exact step paragraph in `.docx`.
    - Ensure sub-bullet steps map after the last bullet (`d.`).
    - Map the final completed status image to `OUTPUT`.
    - Save to `mappings/<lab_name>_map.json`.
-3. **Stage 3: Gandiva OOXML Alignment & Automatic PDF Export (Brahmastra):**
+3. **Stage 3: LayoutEngine OOXML Alignment & Automatic PDF Export (LabForge Core):**
    ```powershell
-   .venv\Scripts\python.exe scripts/brahmastra_engine.py --docx "input/<Lab_Folder>/<record>.docx" --mapping "mappings/<lab_name>_map.json" --out "output/<Record_Name> - Final.docx"
+   .venv\Scripts\python.exe scripts/labforge_engine.py --docx "input/<Lab_Folder>/<record>.docx" --mapping "mappings/<lab_name>_map.json" --out "output/<Lab_Folder>/<Record_Name> - Final.docx"
    ```
 4. **Stage 4: Automated PDF QA Audit:**
    ```powershell
-   .venv\Scripts\python.exe scripts/verify_pdf.py --pdf "output/<Record_Name> - Final.pdf" --mapping "mappings/<lab_name>_map.json"
+   .venv\Scripts\python.exe scripts/verify_pdf.py --pdf "output/<Lab_Folder>/final/<Record_Name> - Final.pdf" --mapping "mappings/<lab_name>_map.json"
    ```
 5. Confirm that all 5 gates pass (`zero_trailing_blank_page`, `zero_orphaned_steps`, `sequential_headers`, `all_screenshots_present`, `footer_single_line`).
 
@@ -120,13 +121,14 @@ When the user says **"Fire Brahmastra"**, **"Run Brahmastra"**, or **"Run Sudars
 
 ## 4. Production Workspace Files
 
-- **`.agents/skills/brahmastra/SKILL.md`**: Official Antigravity skill definition.
+- **`.agents/skills/labforge/SKILL.md`**: Official Antigravity skill definition.
 - **`scripts/inspect_record.py`**: Paragraph and screenshot cataloger.
-- **`scripts/brahmastra_engine.py`**: Locked production OOXML alignment and PDF engine.
-- **`scripts/inject_images.py`**: Backwards-compatible wrapper pointing to `brahmastra_engine.py`.
+- **`scripts/labforge_engine.py`**: Locked production OOXML alignment and PDF engine.
+- **`scripts/inject_images.py`**: Backwards-compatible wrapper pointing to `labforge_engine.py`.
 - **`scripts/verify_pdf.py`**: PyMuPDF audit tool enforcing all acceptance gates.
 - **`mappings/lab1_map.json`**: Production mapping for Lab 1.
 - **`mappings/lab2_map.json`**: Production mapping for Lab 2.
+- **`mappings/lab4_map.json`**: Production mapping for Lab 4.
 - **`output/lab 1/IDFT Lab 1 FTK Imager - Final.docx`**: Final aligned Word document for Lab 1.
 - **`output/lab 1/final/IDFT Lab 1 FTK Imager - Final.pdf`**: Final aligned PDF document for Lab 1.
 - **`output/lab 2/IDFT Lab 2 Autopsy - Final.docx`**: Final aligned Word document for Lab 2.

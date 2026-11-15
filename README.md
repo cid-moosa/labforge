@@ -34,6 +34,88 @@ I don't know if this will be useful to anybody else out there, but it saved my r
 
 ---
 
+## ⚡ Autonomous Setup Prompt (One-Click Copy & Paste)
+
+Copy the master prompt below and paste it directly into your AI coding assistant (**Google Antigravity**, **Gemini CLI**, **Claude Code**, **Cursor**, or **Windsurf**). The agent will automatically clone, configure dependencies, register the `/labforge` skill, and execute the complete pipeline on your lab folders with zero manual setup:
+
+````text
+Act as an autonomous DevOps and Document Automation Engineer. Your objective is to automatically download (or scaffold), configure, register, and execute **Project LabForge: Autonomous Practical Lab Record Automation Engine** in this workspace with zero manual intervention.
+
+---
+
+### PHASE 1: AUTO-DOWNLOAD, SCAFFOLD & ENVIRONMENT SETUP
+1. **Repository & Workspace Initialization:**
+   - Check if a Git repository URL is provided or already cloned in the workspace. If a repo URL is provided (`https://github.com/cid-moosa/labforge.git`), clone or pull the latest changes.
+   - If no external repository URL is provided or if core scripts are missing, scaffold the complete LabForge engine directly in this workspace.
+   - Ensure the mirrored folder hierarchy exists at the project root:
+     ```text
+     input/
+     └── lab 1/
+         └── screenshots/
+     output/
+     ```
+
+2. **Python & System Dependencies:**
+   - Create and activate an isolated Python virtual environment (`.venv`).
+   - Install required Python libraries: `python-docx`, `lxml`, `Pillow`, `pymupdf` (or `pdf2image`), and `pypdf`.
+   - Verify that headless **LibreOffice** (`libreoffice --version` or `soffice --version`) and PDF rendering utilities (`pdftoppm` / `poppler-utils`) are available on the system PATH. If missing, install them automatically via the system package manager.
+
+---
+
+### PHASE 2: BUILD & ENFORCE THE 4-STAGE LABFORGE ARCHITECTURE
+Ensure the workspace scripts (`scripts/labforge_engine.py`, `scripts/verify_pdf.py`, and `scripts/inspect_record.py` or `labforge/layout_engine.py`, `labforge/qa_audit.py`, and `labforge/runner.py`) and your agent execution loop enforce all four architectural stages:
+
+#### Stage 1: SourceGuard (Read-Only Guardrail)
+- Treat `input/` as strictly read-only. Never modify, rename, overwrite, delete, or spellcheck any source `.docx` template or screenshot inside `input/`. All formatting adapts to the source document.
+
+#### Stage 2: VisionTarget (Multimodal AI Vision Mapping)
+- Scan `input/` for any `lab <N>/` folder containing a `.docx` file and a screenshot subfolder.
+- Parse all procedure steps and paragraph indices from the `.docx` template.
+- Inspect every image in the lab's screenshot folder using multimodal vision: read terminal commands, window titles, active GUI dialogs, and highlight boxes.
+- Discard transient loading or splash screens and map each definitive evidence screenshot to its exact target paragraph index in the `.docx`.
+- **Multi-Bullet Rule:** If a step contains sub-bullets (`a, b, c, d`), map the screenshot strictly after the final sub-bullet so explanations are never split.
+
+#### Stage 3: LayoutEngine (7 Root-Cause OpenXML / `wordprocessingML` Fixes)
+Operate directly on the underlying Word OpenXML (`w:` and `a:` namespaces) to resolve all 7 layout bugs before saving to `output/lab <N>/<Original_Name> - Final.docx`:
+1. **Hanging Step Numbers:** Preserve the literal step number prefix, strip native `<w:numPr>` and `<w:tabs>` elements that push numbers into the page, and apply a clean `0.3"` hanging indent.
+2. **Congested Spacing:** Inject `<w:contextualSpacing w:val="0"/>` on all procedure paragraphs and enforce explicit vertical buffers (`Pt(16)` space before, `Pt(12)` space after).
+3. **Off-Center Images:** Insert every screenshot in a dedicated paragraph reset to the `Normal` style with `left_indent = 0`, `right_indent = 0`, `first_line_indent = 0`, and true horizontal page centering (`WD_ALIGN_PARAGRAPH.CENTER`).
+4. **Orphaned Step Text:** Strip empty spacer paragraphs between steps and their screenshots, and bind step text directly to its following image paragraph using `keep_with_next = True` and `keep_together = True`.
+5. **Split Multi-Bullet Steps:** Keep all sub-bullets (`a, b, c, d`) grouped together with `keep_with_next = True` and inject the mapped screenshot strictly after the last sub-bullet.
+6. **Distorted / Page-Breaking Images & 1px Borders:** Calculate the native aspect ratio of each image with `Pillow` and scale it proportionally within smart bounding boxes without clipping or distortion:
+   - Widescreen terminals / full windows: max `5.80" × 2.65"`
+   - Standard GUI dialogs: max `4.80" × 2.60"`
+   - Compact output boxes: max `4.80" × 2.00"`
+   - Inject a crisp 1px solid black OpenXML border (`<a:ln w="12700"><a:solidFill><a:srgbClr val="000000"/></a:solidFill></a:ln>`) around every inline picture (`<pic:spPr>`).
+7. **Doubled Headers & Broken Footers:** Disable `odd_and_even_pages_header_footer` across all document sections, inject dynamic Word page numbering (`<w:fldSimple w:instr="PAGE">` formatted as `1 | Page` through `N | Page`), widen footer textboxes/frames if present, and replace standard hyphens in academic years with non-breaking hyphens so institution and academic-year footers stay on a single line.
+
+#### Stage 4: LabForge Core (Headless PDF Compilation & 5-Gate QA Audit)
+- Convert each generated `.docx` to a publication-ready PDF inside `output/lab <N>/final/<Original_Name> - Final.pdf` using headless LibreOffice:
+  `libreoffice --headless --convert-to pdf --outdir "output/lab <N>/final" "output/lab <N>/<Original_Name> - Final.docx"`
+- Render the generated PDF pages to images and perform both programmatic and visual checks against the **5-Gate PDF Quality Acceptance Checklist**:
+  - **Gate 1 (Zero Trailing Blank Page):** The final page contains real lab content—no empty trailing sheet.
+  - **Gate 2 (Zero Orphaned Steps):** No procedure step sits stranded at the bottom of a page while its screenshot jumps to the next page.
+  - **Gate 3 (Sequential Page Headers):** Dynamic headers increment sequentially (`1 | Page` to `N | Page`) with no duplicate or missing numbers.
+  - **Gate 4 (All Screenshots Accounted For):** 100% of mapped screenshots are embedded in sequence with visible 1px borders and zero edge clipping.
+  - **Gate 5 (Footer Single-Line Format):** Institution name and academic year remain on a single unbroken line across all pages.
+- **Self-Healing Loop:** If any QA Gate fails, automatically adjust the OpenXML bounding boxes or paragraph spacing in `layout_engine.py`, re-compile the `.docx` and PDF, and re-verify until all 5 gates pass.
+
+---
+
+### PHASE 3: REGISTER THE `/labforge` IDE AGENT SKILL
+Create or update the workspace agent skill/rules file (`.agents/skills/labforge/SKILL.md`, `.cursorrules`, `.windsurfrules`, or `CLAUDE.md`) with the complete 4-Stage Architecture instructions above so that typing `/labforge` in any future session immediately triggers automated folder discovery, VisionTarget mapping, LayoutEngine OOXML compilation, and the 5-Gate PDF QA Audit.
+
+---
+
+### PHASE 4: IMMEDIATE EXECUTION
+1. Run Phase 1, Phase 2, and Phase 3 now.
+2. Scan `input/` for any existing lab folders containing a `.docx` file and screenshots:
+   - **If unbuilt labs exist in `input/`:** Execute the full LabForge pipeline on every lab folder right now and output a structured 5-Gate QA Audit report for each generated PDF in `output/<lab_folder>/final/`.
+   - **If `input/` is empty:** Confirm that the virtual environment, headless LibreOffice engine, core scripts, and `/labforge` skill are installed and ready for me to drop my lab folders into `input/`.
+````
+
+---
+
 ## 🏛️ The 4-Stage Core Architecture
 
 ```mermaid

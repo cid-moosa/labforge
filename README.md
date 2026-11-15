@@ -12,9 +12,27 @@
 
 ## 🌟 Overview
 
-**Project LabForge** is an autonomous lab record automation engine built to eliminate the tedious hours spent manually formatting academic and technical lab records in Microsoft Word. It ingests unformatted source `.docx` documents and raw screenshots, applies multimodal vision targeting, solves notorious Word OpenXML layout bugs at the root, and exports publication-ready, teacher-grade `.docx` and `.pdf` deliverables on the first pass.
+**Project LabForge** is an autonomous practical lab record automation engine built to eliminate the tedious hours spent manually formatting academic and technical lab records in Microsoft Word. It ingests unformatted source `.docx` documents and raw screenshots, applies multimodal vision targeting, solves notorious Word OpenXML layout bugs at the root, and exports publication-ready, teacher-grade `.docx` and `.pdf` deliverables on the first pass.
 
 LabForge functions both as a **standalone Python CLI tool** and as an **autonomous AI Agent skill** (for Google Antigravity, Gemini CLI, Claude Code, and Cursor).
+
+---
+
+## 🎓 The Story Behind LabForge (Why I Built This)
+
+Every student knows the drill during practical lab sessions:
+1. While doing the practicals, you take dozens of screenshots for your lab record.
+2. Later, the teacher gives you the standard practical record template (`.docx`).
+3. You have to manually paste, resize, and align every screenshot into the document under each procedure step.
+
+**Why did I build this?**
+- **Honestly? Because I am lazy.** Spending entire weekends manually formatting dozens of lab records in Word was exhausting.
+- **And worse:** Every time I formatted the document manually, it got **rejected by the teacher** due to broken alignments — step numbers pushed into the middle of the page with huge tab gaps, dialog boxes squeezed until unreadable, missing paragraph spacing, and steps stranded at the bottom of pages.
+
+So I engineered **LabForge** to solve this once and for all:
+Now, all you do is create folders like `lab 1`, `lab 2`, `lab 4`, drop the teacher's `.docx` template and your screenshots inside, and LabForge automatically aligns all screenshots with teacher-approved OpenXML layout rules. It outputs clean final PDFs in `lab 1/final/`, `lab 2/final/`, etc., with zero manual effort!
+
+I didn't think this would be useful to anybody else, but it saved my sanity — so this project is **dedicated to my friends, future students who have to survive lab submissions, and fellow nerds like me!** 🚀
 
 ---
 

@@ -190,6 +190,26 @@ def fix_header_and_footer(doc: Document):
                         fld.append(new_r)
                         p.insert(r_idx, fld)
 
+            # Expand width of header title textbox in VML so "Introduction to Digital Forensics" never clips
+            for shape in root.findall(".//{urn:schemas-microsoft-com:vml}shape"):
+                style = shape.attrib.get("style", "")
+                if "width:132" in style or "margin-left:35pt" in style:
+                    new_style = re.sub(r"width:[^;]+", "width:250pt", style)
+                    shape.attrib["style"] = new_style
+
+            # Expand width of header title textbox in DrawingML
+            for a in root.findall(".//{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}anchor"):
+                posH = a.find("{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}positionH")
+                if posH is not None:
+                    offset = posH.find("{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}posOffset")
+                    if offset is not None and int(offset.text or 0) < 1000000:
+                        extent = a.find("{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}extent")
+                        if extent is not None and int(extent.get("cx", 0)) < 2500000:
+                            extent.set("cx", "3200000")
+                        for ext in a.findall(".//{http://schemas.openxmlformats.org/drawingml/2006/main}ext"):
+                            if int(ext.get("cx", 0)) < 2500000:
+                                ext.set("cx", "3200000")
+
     # 2. Fix 2025-29 single line in footers
     for part in doc.part.related_parts.values():
         if "footer" in part.partname:

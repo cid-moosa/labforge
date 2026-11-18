@@ -1,0 +1,335 @@
+{
+  "document": {
+    "path": "input/lab 6/IDFT Lab 6 File Carving.docx",
+    "total_non_empty_paragraphs": 28,
+    "paragraphs": [
+      {
+        "paragraph_index": 0,
+        "style": "Heading 1",
+        "category": "body",
+        "text": "PRACTICAL-6",
+        "char_count": 11
+      },
+      {
+        "paragraph_index": 1,
+        "style": "Body Text",
+        "category": "heading",
+        "text": "AIM: Perform data recovery from the evidence drive provided using appropriate tool. Perform data carving using appropriate tool.",
+        "char_count": 128
+      },
+      {
+        "paragraph_index": 2,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Data carving is the process of extracting deleted or hidden data directly from a storage device (like a hard drive, USB, or memory card), based on file signatures — not file names or paths.",
+        "char_count": 189
+      },
+      {
+        "paragraph_index": 4,
+        "style": "Normal",
+        "category": "body",
+        "text": "TOOL USED: Foremost, Scalpel",
+        "char_count": 28
+      },
+      {
+        "paragraph_index": 5,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Foremost",
+        "char_count": 8
+      },
+      {
+        "paragraph_index": 6,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Foremost is a command-line digital forensics tool used for file recovery by \"carving\" data based on headers, footers, and internal data structures to recover files that may have been deleted or corrupted.",
+        "char_count": 204
+      },
+      {
+        "paragraph_index": 7,
+        "style": "Normal",
+        "category": "body",
+        "text": "Scalpel",
+        "char_count": 7
+      },
+      {
+        "paragraph_index": 8,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Scalpel is a command-line, file carving tool for digital forensics that recovers files by searching for headers and footers in a disk image or raw device.",
+        "char_count": 154
+      },
+      {
+        "paragraph_index": 10,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Locating the files",
+        "char_count": 18
+      },
+      {
+        "paragraph_index": 11,
+        "style": "Heading 3",
+        "category": "body",
+        "text": "Steps",
+        "char_count": 5
+      },
+      {
+        "paragraph_index": 12,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Open terminal in ubuntu.",
+        "char_count": 24
+      },
+      {
+        "paragraph_index": 20,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Locate the Evidence File or Drive using Lsblk command .",
+        "char_count": 55
+      },
+      {
+        "paragraph_index": 24,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Lsblk lists information about all available or the specified block devices.",
+        "char_count": 75
+      },
+      {
+        "paragraph_index": 26,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Formost",
+        "char_count": 7
+      },
+      {
+        "paragraph_index": 27,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Run Foremost command for data recovery.",
+        "char_count": 39
+      },
+      {
+        "paragraph_index": 28,
+        "style": "List Paragraph",
+        "category": "output_heading",
+        "text": "Basic : sudo foremost -i < specify input file > -o <foremost_output_directory>",
+        "char_count": 78
+      },
+      {
+        "paragraph_index": 29,
+        "style": "List Paragraph",
+        "category": "output_heading",
+        "text": "Sudo foremost -t < specify file type (jpeg,pdf,….)> -i < specify input file> -o <output directory>",
+        "char_count": 98
+      },
+      {
+        "paragraph_index": 30,
+        "style": "List Paragraph",
+        "category": "output_heading",
+        "text": "Open the output folder to see the recovered files.",
+        "char_count": 50
+      },
+      {
+        "paragraph_index": 34,
+        "style": "List Paragraph",
+        "category": "output_heading",
+        "text": "For viewing the recovery report inside the output folder open the audit.txt file to see the details about recovered files, their formats, and total recovery summary.",
+        "char_count": 165
+      },
+      {
+        "paragraph_index": 36,
+        "style": "Normal",
+        "category": "body",
+        "text": "Scalpel",
+        "char_count": 7
+      },
+      {
+        "paragraph_index": 38,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Run nano scalpel command to open configuration file.",
+        "char_count": 52
+      },
+      {
+        "paragraph_index": 43,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Edit the Configuration file by opening the Scalpel configuration file to enable the file types you want to recover.",
+        "char_count": 115
+      },
+      {
+        "paragraph_index": 47,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Remove the “#” symbol before the file types (e.g., jpg, png, pdf, doc) you want to carve.",
+        "char_count": 89
+      },
+      {
+        "paragraph_index": 52,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Run the Scalpel command for data recovery.",
+        "char_count": 42
+      },
+      {
+        "paragraph_index": 53,
+        "style": "List Paragraph",
+        "category": "output_heading",
+        "text": "Sudo scalpel <input storage> -o <Scalpel_output>",
+        "char_count": 48
+      },
+      {
+        "paragraph_index": 55,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Data recovery will be completed after few minutes.",
+        "char_count": 50
+      },
+      {
+        "paragraph_index": 60,
+        "style": "Body Text",
+        "category": "output_heading",
+        "text": "OUTPUT",
+        "char_count": 6
+      },
+      {
+        "paragraph_index": 62,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Successfully completed the data recovery of the given drive using Foremost tool and Scalpel.",
+        "char_count": 92
+      }
+    ]
+  },
+  "screenshots": {
+    "total_found": 14,
+    "catalog": [
+      {
+        "filename": "Screenshot_2026-11-18_04_15_09.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_15_09.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 151.5
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_15_13.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_15_13.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 173.4
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_16_36.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_16_36.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 1157.3
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_23_40.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_23_40.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 69.4
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_23_48.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_23_48.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 125.5
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_23_50.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_23_50.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 76.5
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_23_59.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_23_59.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 229.2
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_52_19.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_52_19.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 951.3
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_52_34.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_52_34.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 692.6
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_52_40.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_52_40.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 696.8
+      },
+      {
+        "filename": "Screenshot_2026-11-18_04_53_14.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_04_53_14.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 272.4
+      },
+      {
+        "filename": "Screenshot_2026-11-18_05_01_27.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_05_01_27.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 1199.0
+      },
+      {
+        "filename": "Screenshot_2026-11-18_05_03_30.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_05_03_30.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 154.1
+      },
+      {
+        "filename": "Screenshot_2026-11-18_05_03_39.png",
+        "path": "input/lab 6/Screenshot_2026-11-18_05_03_39.png",
+        "width_px": 1920,
+        "height_px": 1080,
+        "aspect_ratio": 1.78,
+        "classification": "widescreen",
+        "size_kb": 189.9
+      }
+    ]
+  }
+}

@@ -121,7 +121,7 @@ When the user says **"Run LabForge"**, **"Fire LabForge"**, or **"/labforge"**:
    ```
 4. **Stage 4: Automated PDF QA Audit:**
    ```powershell
-   .venv\Scripts\python.exe scripts/verify_pdf.py --pdf "output/<Lab_Folder>/final/<Record_Name> - Final.pdf" --mapping "mappings/<lab_name>_map.json"
+   .venv\Scripts\python.exe scripts/verify_pdf.py --pdf "output/<Lab_Folder>/<Record_Name> - Final.pdf" --mapping "mappings/<lab_name>_map.json"
    ```
 5. Confirm that all 5 gates pass (`zero_trailing_blank_page`, `zero_orphaned_steps`, `sequential_headers`, `all_screenshots_present`, `footer_single_line`).
 
@@ -139,10 +139,10 @@ When the user says **"Run LabForge"**, **"Fire LabForge"**, or **"/labforge"**:
 - **`mappings/lab4_map.json`**: Production mapping for Lab 4.
 - **`mappings/lab6_map.json`**: Production mapping for Lab 6.
 - **`output/lab 1/IDFT Lab 1 FTK Imager - Final.docx`**: Final aligned Word document for Lab 1.
-- **`output/lab 1/final/IDFT Lab 1 FTK Imager - Final.pdf`**: Final aligned PDF document for Lab 1.
+- **`output/lab 1/IDFT Lab 1 FTK Imager - Final.pdf`**: Final aligned PDF document for Lab 1.
 - **`output/lab 2/IDFT Lab 2 Autopsy - Final.docx`**: Final aligned Word document for Lab 2.
-- **`output/lab 2/final/IDFT Lab 2 Autopsy - Final.pdf`**: Final aligned PDF document for Lab 2.
+- **`output/lab 2/IDFT Lab 2 Autopsy - Final.pdf`**: Final aligned PDF document for Lab 2.
 - **`output/lab 4/IDFT Lab 4 Guymager - Final.docx`**: Final aligned Word document for Lab 4.
-- **`output/lab 4/final/IDFT Lab 4 Guymager - Final.pdf`**: Final aligned PDF document for Lab 4.
+- **`output/lab 4/IDFT Lab 4 Guymager - Final.pdf`**: Final aligned PDF document for Lab 4.
 - **`output/lab 6/IDFT Lab 6 File Carving - Final.docx`**: Final aligned Word document for Lab 6.
-- **`output/lab 6/final/IDFT Lab 6 File Carving - Final.pdf`**: Final aligned PDF document for Lab 6.
+- **`output/lab 6/IDFT Lab 6 File Carving - Final.pdf`**: Final aligned PDF document for Lab 6.

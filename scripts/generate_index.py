@@ -265,11 +265,9 @@ def generate_index_document(output_docx: str, output_pdf: str):
 
 if __name__ == "__main__":
     out_dir = os.path.join(PROJECT_ROOT, "output", "index")
-    out_pdf_dir = os.path.join(out_dir, "final")
     os.makedirs(out_dir, exist_ok=True)
-    os.makedirs(out_pdf_dir, exist_ok=True)
 
     docx_path = os.path.join(out_dir, "IDFT Lab Record Index - Final.docx")
-    pdf_path = os.path.join(out_pdf_dir, "IDFT Lab Record Index - Final.pdf")
+    pdf_path = os.path.join(out_dir, "IDFT Lab Record Index - Final.pdf")
 
     generate_index_document(docx_path, pdf_path)

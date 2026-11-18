@@ -862,7 +862,7 @@ def main():
     if not pdf_target:
         out_dir = os.path.dirname(args.out_docx)
         filename_no_ext = os.path.splitext(os.path.basename(args.out_docx))[0]
-        pdf_target = os.path.join(out_dir, "final", filename_no_ext + ".pdf")
+        pdf_target = os.path.join(out_dir, filename_no_ext + ".pdf")
 
     try:
         build_aligned_record(

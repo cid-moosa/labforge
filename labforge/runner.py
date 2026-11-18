@@ -53,11 +53,9 @@ def run_pipeline(input_dir: str = "input", output_dir: str = "output", mappings_
         base_name = os.path.splitext(os.path.basename(docx_path))[0]
         lab_out_dir = os.path.join(output_dir, lab_name)
         out_docx = os.path.join(lab_out_dir, f"{base_name} - Final.docx")
-        final_pdf_dir = os.path.join(lab_out_dir, "final")
-        out_pdf = os.path.join(final_pdf_dir, f"{base_name} - Final.pdf")
+        out_pdf = os.path.join(lab_out_dir, f"{base_name} - Final.pdf")
 
         os.makedirs(lab_out_dir, exist_ok=True)
-        os.makedirs(final_pdf_dir, exist_ok=True)
 
         print(f"   📐 LayoutEngine: Formatting {docx_path} -> {out_docx}")
         try:

@@ -42,6 +42,8 @@ def snapshot_directory_hashes(directory: str) -> Dict[str, str]:
 
     for root, _, files in os.walk(directory):
         for f in files:
+            if f.endswith(".tmp") or f.startswith("~$"):
+                continue
             full_path = os.path.join(root, f)
             rel_path = os.path.relpath(full_path, directory).replace("\\", "/")
             hashes[rel_path] = hash_file(full_path)

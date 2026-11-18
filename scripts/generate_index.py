@@ -152,7 +152,7 @@ def generate_index_document(output_docx: str, output_pdf: str):
         ("3", "16-09-2026", "RegRipper", ""),
         ("4", "23-09-2026", "Guymager", "17 – 21"),
         ("5", "07-10-2026", "Steghide", ""),
-        ("6", "28-10-2026", "File Carving (Foremost, Scalpel)", ""),
+        ("6", "28-10-2026", "File Carving (Foremost, Scalpel)", "22 – 28"),
     ]
 
     col_widths = [Inches(0.7), Inches(1.2), Inches(2.9), Inches(1.0), Inches(1.2)]

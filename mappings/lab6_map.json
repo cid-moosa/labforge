@@ -14,7 +14,7 @@
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_15_09.png",
       "caption": "Figure 1: Kali Linux Terminal launched",
       "page_break_before": false,
-      "crop": "auto_terminal"
+      "crop": false
     },
     {
       "after_paragraph_index": 24,

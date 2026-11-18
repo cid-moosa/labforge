@@ -36,6 +36,15 @@ try:
 except ImportError as e:
     sys.exit(f"Error: Missing required dependency ({e}). Run: uv pip install python-docx Pillow lxml")
 
+try:
+    from scripts.image_utils import crop_box, crop_terminal_window
+except ImportError:
+    try:
+        from image_utils import crop_box, crop_terminal_window
+    except ImportError:
+        crop_box = None
+        crop_terminal_window = None
+
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 LIBREOFFICE_PATHS = [
@@ -378,7 +387,8 @@ def build_aligned_record(
     docx_path: str,
     mapping_path: str,
     output_docx: str,
-    output_pdf: Optional[str] = None
+    output_pdf: Optional[str] = None,
+    no_crop: bool = False,
 ) -> Tuple[str, Optional[str]]:
     """
     Executes the full Project LabForge alignment pipeline on the given lab record.
@@ -418,7 +428,9 @@ def build_aligned_record(
             "target_index": int(target_idx),
             "image_path": resolved_img,
             "caption": caption,
-            "page_break_before": bool(pb)
+            "page_break_before": bool(pb),
+            "crop": entry.get("crop", None),
+            "crop_padding": int(entry.get("crop_padding", 12)),
         })
 
     # Read original document (Read-Only Source), ensuring college headers/footers exist
@@ -665,13 +677,28 @@ def build_aligned_record(
             img_path = item["image_path"]
             caption_text = item["caption"]
             img_page_break_before = item.get("page_break_before", False)
+            crop_spec = item.get("crop", None)
+            crop_pad = item.get("crop_padding", 12)
 
             with Image.open(img_path) as raw_img:
                 if raw_img.mode not in ("RGB", "RGBA"):
                     raw_img = raw_img.convert("RGBA" if "transparency" in raw_img.info else "RGB")
 
+                # Smart Terminal / Active Window Cropping (Recoverable & Non-destructive)
+                processed_img = raw_img.copy()
+                if not no_crop and crop_spec is not None and crop_spec is not False:
+                    if isinstance(crop_spec, str) and crop_spec.lower() in ("auto_terminal", "auto", "terminal"):
+                        if crop_terminal_window is not None:
+                            processed_img = crop_terminal_window(processed_img, padding=crop_pad)
+                    elif crop_spec is True:
+                        if crop_terminal_window is not None:
+                            processed_img = crop_terminal_window(processed_img, padding=crop_pad)
+                    elif isinstance(crop_spec, (list, tuple)) and len(crop_spec) == 4:
+                        if crop_box is not None:
+                            processed_img = crop_box(processed_img, tuple(crop_spec))
+
                 # 1px crisp solid black border without cropping any edge pixels
-                bordered_img = ImageOps.expand(raw_img, border=1, fill="black")
+                bordered_img = ImageOps.expand(processed_img, border=1, fill="black")
                 w_px, h_px = bordered_img.size
                 aspect = w_px / h_px
 
@@ -822,6 +849,12 @@ def main():
         default=None,
         help="Optional path for generated output .pdf document (auto-derived if not passed)."
     )
+    parser.add_argument(
+        "--no-crop",
+        action="store_true",
+        default=False,
+        help="Disable all screenshot cropping and insert full uncropped original images."
+    )
 
     args = parser.parse_args()
 
@@ -836,7 +869,8 @@ def main():
             docx_path=args.docx,
             mapping_path=args.mapping,
             output_docx=args.out_docx,
-            output_pdf=pdf_target
+            output_pdf=pdf_target,
+            no_crop=args.no_crop,
         )
     except Exception as e:
         sys.exit(f"LabForge Engine error: {e}")

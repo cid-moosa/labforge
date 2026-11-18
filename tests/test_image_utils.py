@@ -19,6 +19,8 @@ from scripts.image_utils import (
     batch_process_images,
     crop_box,
     crop_margins,
+    crop_terminal_window,
+    detect_terminal_window,
     get_image_metadata,
     main as image_utils_main,
     parse_args,
@@ -339,6 +341,75 @@ class TestImageUtils(unittest.TestCase):
         self.assertEqual(res_jpg["success"], 1)
         processed_jpg_names = [os.path.basename(f) for f in res_jpg["files"]]
         self.assertEqual(processed_jpg_names, ["photo.jpg"])
+
+    def test_detect_and_crop_terminal_window_synthetic(self):
+        # Create a synthetic 1920x1080 desktop with a terminal window on the left
+        img = Image.new("RGB", (1920, 1080), (15, 23, 30))  # dark desktop wallpaper
+        # Top panel at y=0..34
+        for y in range(34):
+            for x in range(1920):
+                img.putpixel((x, y), (30, 30, 30))
+        # Draw terminal text content on left: x in [50..800], y in [100..600]
+        for y in range(100, 600, 10):
+            for x in range(50, 800, 4):
+                img.putpixel((x, y), (220, 220, 220))
+
+        box = detect_terminal_window(img, padding=12)
+        # Should crop from x1=0 (prompt snap rule), y1=34 (top panel snap rule)
+        self.assertEqual(box[0], 0)
+        self.assertEqual(box[1], 34)
+        self.assertGreaterEqual(box[2], 800)  # encompasses text width
+        self.assertGreaterEqual(box[3], 600)  # encompasses text height
+
+        cropped = crop_terminal_window(img, padding=12)
+        self.assertEqual(cropped.size, (box[2] - box[0], box[3] - box[1]))
+        self.assertLess(cropped.width, 1920)
+
+    def test_detect_terminal_window_read_only_and_preservation(self):
+        real_img_path = "input/lab 6/Screenshot_2026-11-18_04_15_09.png"
+        if os.path.isfile(real_img_path):
+            hash_before = hash_file(real_img_path)
+            with Image.open(real_img_path) as img:
+                box = detect_terminal_window(img)
+                self.assertEqual(box, (900, 34, 1920, 566))
+                cropped = crop_terminal_window(img)
+                self.assertEqual(cropped.size, (1020, 532))
+
+            # SourceGuard verification: input file on disk must never be modified
+            hash_after = hash_file(real_img_path)
+            self.assertEqual(hash_before, hash_after, "Source file in input/ was altered!")
+
+    def test_prepare_screenshot_recoverability_and_toggling(self):
+        # Verify that crop can be enabled ("auto_terminal" or True), custom cropped, or completely undone (crop=False)
+        real_img_path = "input/lab 6/Screenshot_2026-11-18_04_15_09.png"
+        if os.path.isfile(real_img_path):
+            with Image.open(real_img_path) as img:
+                orig_w, orig_h = img.size
+
+                # 1. Terminal crop enabled
+                res_crop = prepare_screenshot(img, crop="auto_terminal", border_width=1)
+                # Cropped to 1020x532 + 2px border = 1022x534
+                self.assertEqual(res_crop.size, (1022, 534))
+
+                # 2. Recoverability / Undo: setting crop=False restores full original resolution
+                res_undo = prepare_screenshot(img, crop=False, border_width=1)
+                self.assertEqual(res_undo.size, (orig_w + 2, orig_h + 2))
+
+                # 3. Explicit crop box
+                res_box = prepare_screenshot(img, crop=[100, 50, 500, 400], border_width=1)
+                self.assertEqual(res_box.size, (402, 352))
+
+    def test_cli_terminal_crop_options(self):
+        img_path = os.path.join(self.temp_dir, "cli_crop.png")
+        create_synthetic_image(img_path, width=400, height=300)
+
+        args_crop = parse_args(["--input", img_path, "--crop-terminal"])
+        self.assertTrue(args_crop.crop_terminal)
+        self.assertFalse(args_crop.no_crop)
+
+        args_no_crop = parse_args(["--input", img_path, "--no-crop"])
+        self.assertTrue(args_no_crop.no_crop)
+        self.assertFalse(args_crop.no_crop)
 
     def test_engine_immutability(self):
         # Verify that scripts/labforge_engine.py is 100% untouched

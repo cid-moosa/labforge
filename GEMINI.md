@@ -92,6 +92,14 @@ Every rule below fixes a real Word/PDF layout bug:
   4. Keep institution name on the bottom-left footer and academic year (e.g. `2025\u201129` using a non-breaking hyphen and expanded textbox to `55pt` at `margin-left: 485pt` / posOffset) on the bottom-right footer so it never splits across two lines.
   5. Strip any trailing empty paragraphs at the end of `doc.paragraphs` so no blank extra page is created at the end.
 
+### Bug 8: The "Distant Unreadable Terminal vs. Aggressive Wallpaper Crop" Standard
+- **What went wrong:** Full 1920×1080 desktop captures reduce terminal fonts to unreadable sizes and display distracting wallpapers or desktop icons. Conversely, aggressive cropping risks slicing through terminal columns, prompt lines, titlebar controls, or scrollbars.
+- **The Mandatory Fix:**
+  1. **Active Window Detection**: Detect active window / terminal boundaries via titlebar detection (e.g. Kali red titlebars `R>=170, G<=70, B<=70`) or panel metrics, trimming external OS bars (`y=0..34`, `y=h-38..h`) and wallpaper margins while framing the complete terminal window entity.
+  2. **Minimal & Conservative**: Keep the entire window entity intact with safe padding; never slice through terminal columns, titlebar buttons, or dialog controls.
+  3. **100% Reversibility**: Original assets in `input/` remain read-only. Setting `"crop": false` in `mapping.json` or passing `--no-crop` to the CLI immediately restores 100% full uncropped images with 1px black borders.
+  4. **Code-First Order**: Always build and test cropping code against test fixtures first before regenerating records.
+
 ---
 
 ## 3. Autonomous Execution Protocol ("Run LabForge")
@@ -129,9 +137,12 @@ When the user says **"Run LabForge"**, **"Fire LabForge"**, or **"/labforge"**:
 - **`mappings/lab1_map.json`**: Production mapping for Lab 1.
 - **`mappings/lab2_map.json`**: Production mapping for Lab 2.
 - **`mappings/lab4_map.json`**: Production mapping for Lab 4.
+- **`mappings/lab6_map.json`**: Production mapping for Lab 6.
 - **`output/lab 1/IDFT Lab 1 FTK Imager - Final.docx`**: Final aligned Word document for Lab 1.
 - **`output/lab 1/final/IDFT Lab 1 FTK Imager - Final.pdf`**: Final aligned PDF document for Lab 1.
 - **`output/lab 2/IDFT Lab 2 Autopsy - Final.docx`**: Final aligned Word document for Lab 2.
 - **`output/lab 2/final/IDFT Lab 2 Autopsy - Final.pdf`**: Final aligned PDF document for Lab 2.
 - **`output/lab 4/IDFT Lab 4 Guymager - Final.docx`**: Final aligned Word document for Lab 4.
 - **`output/lab 4/final/IDFT Lab 4 Guymager - Final.pdf`**: Final aligned PDF document for Lab 4.
+- **`output/lab 6/IDFT Lab 6 File Carving - Final.docx`**: Final aligned Word document for Lab 6.
+- **`output/lab 6/final/IDFT Lab 6 File Carving - Final.pdf`**: Final aligned PDF document for Lab 6.

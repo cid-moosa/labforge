@@ -20,7 +20,8 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from scripts.labforge_engine import convert_docx_to_pdf
+from docx.oxml import parse_xml
+from scripts.labforge_engine import convert_docx_to_pdf, W_NS
 from scripts.generate_index import generate_index_document
 
 REFERANCE_DOCX = os.path.join(PROJECT_ROOT, "input", "referance", "BCF Certification pages.docx")
@@ -56,10 +57,29 @@ LAB_FILES = [
 
 
 def create_cover_and_certificate(out_pdf_path: str):
-    """Generates the 2-page Cover and Certificate PDF directly from the official college template."""
+    """Generates the 2-page Cover and Certificate PDF directly from the official college template, standardizing Certificate page borders to thin single border."""
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
+        temp_docx = os.path.join(tmpdir, "cover.docx")
         temp_pdf = os.path.join(tmpdir, "cover.pdf")
-        convert_docx_to_pdf(TEMPLATE_DOCX, temp_pdf)
+        
+        doc = docx.Document(TEMPLATE_DOCX)
+        if len(doc.sections) > 1:
+            sectPr = doc.sections[1]._sectPr
+            for child in list(sectPr):
+                if child.tag.endswith('pgBorders'):
+                    sectPr.remove(child)
+            pgBorders = parse_xml(f'''
+                <w:pgBorders xmlns:w="{W_NS}" w:offsetFrom="page">
+                    <w:top w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                    <w:left w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                    <w:bottom w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                    <w:right w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                </w:pgBorders>
+            ''')
+            sectPr.append(pgBorders)
+        
+        doc.save(temp_docx)
+        convert_docx_to_pdf(temp_docx, temp_pdf)
         shutil.copyfile(temp_pdf, out_pdf_path)
 
 
@@ -111,14 +131,19 @@ def assemble_master_record(student_key: str):
         master_doc.insert_pdf(doc_index)
         doc_index.close()
 
-        # 3. Insert all 6 Practicals
+        # 3. Insert all Practicals
         page_cursor = 4
         for title, filename in LAB_FILES:
             lab_path = os.path.join(out_dir, filename)
             if not os.path.exists(lab_path):
                 raise FileNotFoundError(f"Missing lab PDF: {lab_path}")
             doc_lab = fitz.open(lab_path)
-            toc.append([1, title, page_cursor])
+            if "File Carving" in filename:
+                # Foremost is 3 pages (pages 36-38), Scalpel is 4 pages (pages 39-42)
+                toc.append([1, "Practical 6: Foremost (28-10-2026)", page_cursor])
+                toc.append([1, "Practical 7: Scalpel (28-10-2026)", page_cursor + 3])
+            else:
+                toc.append([1, title, page_cursor])
             master_doc.insert_pdf(doc_lab)
             page_cursor += len(doc_lab)
             doc_lab.close()
@@ -135,6 +160,7 @@ def assemble_master_record(student_key: str):
             24: "23-09-2026",
             29: "07-10-2026",
             36: "28-10-2026",
+            39: "28-10-2026",
         }
         for p_num in range(4, total_pages + 1):
             page = master_doc[p_num - 1]
@@ -152,6 +178,17 @@ def assemble_master_record(student_key: str):
                 date_str = f"Date: {practical_dates[p_num]}"
                 y_pos = 80 if p_num == 4 else 75
                 page.insert_text(fitz.Point(445, y_pos), date_str, fontname="times-bold", fontsize=11, color=(0, 0, 0))
+
+            if p_num == 39:
+                # Stamp centered PRACTICAL: 7 heading
+                page.insert_text(fitz.Point(235, 75), "PRACTICAL: 7", fontname="times-bold", fontsize=13, color=(0, 0, 0))
+
+        # 5. Guarantee thin single page border on every content page (Pages 2 through 42)
+        for p_num in range(2, total_pages + 1):
+            page = master_doc[p_num - 1]
+            has_border = any(d.get('rect') and d['rect'].width > 500 for d in page.get_drawings())
+            if not has_border:
+                page.draw_rect(fitz.Rect(24.0, 24.0, 571.25, 817.85), color=(0, 0, 0), width=0.5)
 
         master_doc.save(master_pdf_path, deflate=True)
         master_doc.close()

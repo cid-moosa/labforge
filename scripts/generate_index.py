@@ -92,8 +92,8 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
     title_p.paragraph_format.space_before = Pt(36)
     title_p.paragraph_format.space_after = Pt(28)
     run_title = title_p.add_run("INDEX")
-    run_title.font.name = "Calibri"
-    run_title.font.size = Pt(16)
+    run_title.font.name = "Times New Roman"
+    run_title.font.size = Pt(14)
     run_title.font.bold = True
     run_title.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
@@ -108,7 +108,7 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
         ("7.", "28-10-2026", "Scalpel", "39-42"),
     ]
 
-    col_widths = [Inches(0.8), Inches(1.3), Inches(3.12), Inches(1.3)]
+    col_widths = [Inches(0.70), Inches(1.45), Inches(3.05), Inches(1.30)]
     headers = ["SL No.", "DATE", "NAME OF EXPERIMENT", "PAGE NO"]
 
     table = doc.add_table(rows=len(practicals) + 1, cols=4)
@@ -119,12 +119,12 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
     hdr_cells = table.rows[0].cells
     for i, title in enumerate(headers):
         hdr_cells[i].width = col_widths[i]
-        set_cell_margins(hdr_cells[i], top=140, bottom=140, left=100, right=100)
+        set_cell_margins(hdr_cells[i], top=120, bottom=120, left=100, right=100)
         border_spec = {
-            'top': {'val': 'single', 'sz': 8, 'color': '000000'},
-            'bottom': {'val': 'single', 'sz': 8, 'color': '000000'},
-            'left': {'val': 'single', 'sz': 8, 'color': '000000'},
-            'right': {'val': 'single', 'sz': 8, 'color': '000000'},
+            'top': {'val': 'single', 'sz': 4, 'color': '000000'},
+            'bottom': {'val': 'single', 'sz': 4, 'color': '000000'},
+            'left': {'val': 'single', 'sz': 4, 'color': '000000'},
+            'right': {'val': 'single', 'sz': 4, 'color': '000000'},
         }
         set_cell_border(hdr_cells[i], **border_spec)
 
@@ -133,8 +133,8 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
         p.paragraph_format.space_before = Pt(4)
         p.paragraph_format.space_after = Pt(4)
         run = p.add_run(title)
-        run.font.name = "Calibri"
-        run.font.size = Pt(11)
+        run.font.name = "Times New Roman"
+        run.font.size = Pt(12)
         run.font.bold = True
         run.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
@@ -144,13 +144,13 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
         for c_idx, text in enumerate(row_data):
             row_cells[c_idx].width = col_widths[c_idx]
             row_cells[c_idx].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-            set_cell_margins(row_cells[c_idx], top=130, bottom=130, left=100, right=100)
+            set_cell_margins(row_cells[c_idx], top=110, bottom=110, left=100, right=100)
             
             border_spec = {
                 'top': {'val': 'single', 'sz': 4, 'color': '000000'},
-                'bottom': {'val': 'single', 'sz': 8 if r_idx == len(practicals)-1 else 4, 'color': '000000'},
-                'left': {'val': 'single', 'sz': 8, 'color': '000000'},
-                'right': {'val': 'single', 'sz': 8, 'color': '000000'},
+                'bottom': {'val': 'single', 'sz': 4, 'color': '000000'},
+                'left': {'val': 'single', 'sz': 4, 'color': '000000'},
+                'right': {'val': 'single', 'sz': 4, 'color': '000000'},
             }
             set_cell_border(row_cells[c_idx], **border_spec)
 
@@ -160,8 +160,8 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
             run = p.add_run(text)
-            run.font.name = "Calibri"
-            run.font.size = Pt(11)
+            run.font.name = "Times New Roman"
+            run.font.size = Pt(12)
             run.font.bold = True
             run.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
@@ -185,6 +185,20 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
         sectPr.remove(pnt)
     pgNumType = parse_xml(f'<w:pgNumType xmlns:w="{W_NS}" w:start="3"/>')
     sectPr.append(pgNumType)
+
+    # Apply thin subtle page border (0.5 pt single black, 24 pt offset)
+    for child in list(sectPr):
+        if child.tag.endswith('pgBorders'):
+            sectPr.remove(child)
+    pgBorders = parse_xml(f'''
+        <w:pgBorders xmlns:w="{W_NS}" w:offsetFrom="page">
+            <w:top w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+            <w:left w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+            <w:bottom w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+            <w:right w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+        </w:pgBorders>
+    ''')
+    sectPr.append(pgBorders)
 
     doc_final.save(output_docx)
 

@@ -23,13 +23,25 @@ if PROJECT_ROOT not in sys.path:
 from scripts.labforge_engine import convert_docx_to_pdf
 from scripts.generate_index import generate_index_document
 
-TEMPLATE_DOCX = os.path.join(PROJECT_ROOT, "templates", "college_record_cover_template.docx")
+REFERANCE_DOCX = os.path.join(PROJECT_ROOT, "input", "referance", "BCF Certification pages.docx")
+FALLBACK_TEMPLATE_DOCX = os.path.join(PROJECT_ROOT, "templates", "college_record_cover_template.docx")
+TEMPLATE_DOCX = REFERANCE_DOCX if os.path.exists(REFERANCE_DOCX) else FALLBACK_TEMPLATE_DOCX
 
 STUDENTS = {
-    "student1": {
-        "display_name": os.getenv("LABFORGE_STUDENT_NAME", "Student Name"),
-        "reg_no": os.getenv("LABFORGE_STUDENT_REGNO", "MG26101A0000"),
-        "output_dir": os.path.join(PROJECT_ROOT, "output", "student1"),
+    "cidmoosa": {
+        "display_name": os.getenv("LABFORGE_STUDENT_NAME", "ARUN P S"),
+        "reg_no": os.getenv("LABFORGE_STUDENT_REGNO", "MG26101A3144"),
+        "output_dir": os.path.join(PROJECT_ROOT, "output", "cidmoosa"),
+    },
+    "asna": {
+        "display_name": "ASNA SAJI",
+        "reg_no": "",
+        "output_dir": os.path.join(PROJECT_ROOT, "output", "asna"),
+    },
+    "arjun": {
+        "display_name": "ARJUN K BINOY",
+        "reg_no": "",
+        "output_dir": os.path.join(PROJECT_ROOT, "output", "arjun"),
     },
 }
 
@@ -43,47 +55,11 @@ LAB_FILES = [
 ]
 
 
-def create_cover_and_certificate(student_name: str, reg_no: str, out_pdf_path: str, exam_date: str = ""):
-    """Generates the 2-page Cover and Certificate PDF using the college template."""
+def create_cover_and_certificate(out_pdf_path: str):
+    """Generates the 2-page Cover and Certificate PDF directly from the official college template."""
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
-        temp_docx = os.path.join(tmpdir, "cover.docx")
         temp_pdf = os.path.join(tmpdir, "cover.pdf")
-
-        doc = docx.Document(TEMPLATE_DOCX)
-        for p in doc.paragraphs:
-            if "Subject:" in p.text and "…………" in p.text:
-                p.text = "Subject: - Introduction to Digital Forensics"
-                for r in p.runs:
-                    r.font.name = "Calibri"
-                    r.font.size = docx.shared.Pt(11)
-            if "Name:" in p.text and "Reg No:" in p.text:
-                name_str = student_name if student_name else "...................................................."
-                reg_str = reg_no if reg_no else "......................................."
-                p.text = f"Name: {name_str}   Reg No: {reg_str}   Semester: 1"
-                for r in p.runs:
-                    r.font.name = "Calibri"
-                    r.font.size = docx.shared.Pt(11)
-            elif "Certified that this is a Bonafide" in p.text:
-                name_str = student_name if student_name else "............................................................"
-                reg_str = reg_no if reg_no else "............................................................"
-                p.text = (
-                    f"Certified that this is a Bonafide record of practical work done by "
-                    f"Mr./Ms. {name_str} "
-                    f"Reg.No. {reg_str} of First semester "
-                    f"of Bachelor of Science in Cyber forensics during the year 2025 – 2029"
-                )
-                for r in p.runs:
-                    r.font.name = "Calibri"
-                    r.font.size = docx.shared.Pt(11)
-            elif "Submitted for the practical examination" in p.text:
-                date_str = exam_date if exam_date else "........................................."
-                p.text = f"Submitted for the practical examination held on {date_str} at GIAL, Kottayam"
-                for r in p.runs:
-                    r.font.name = "Calibri"
-                    r.font.size = docx.shared.Pt(11)
-
-        doc.save(temp_docx)
-        convert_docx_to_pdf(temp_docx, temp_pdf)
+        convert_docx_to_pdf(TEMPLATE_DOCX, temp_pdf)
         shutil.copyfile(temp_pdf, out_pdf_path)
 
 
@@ -113,7 +89,7 @@ def assemble_master_record(student_key: str):
         index_pdf = os.path.join(tmpdir, f"{student_key}_index.pdf")
 
         print("-> Generating Cover & Certificate...")
-        create_cover_and_certificate(name, reg, cover_pdf)
+        create_cover_and_certificate(cover_pdf)
 
         print("-> Generating Index Sheet...")
         create_index_sheet(name, reg, index_pdf)

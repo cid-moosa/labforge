@@ -97,15 +97,15 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
     run_title.font.bold = True
     run_title.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
-    # Teacher standard 7-row index table with 2026 dates synced
+    # Teacher standard 7-row index table with 2025 dates synced
     practicals = [
-        ("1.", "05-08-2026", "Exterro FTK Imager", "4-11"),
-        ("2.", "02-09-2026", "Autopsy", "12-19"),
-        ("3.", "16-09-2026", "RegRipper", "20-23"),
-        ("4.", "23-09-2026", "Guymager", "24-28"),
-        ("5.", "07-10-2026", "Steghide", "29-35"),
-        ("6.", "28-10-2026", "Foremost", "36-38"),
-        ("7.", "28-10-2026", "Scalpel", "39-42"),
+        ("1.", "20-08-2025", "Exterro FTK Imager", "4-11"),
+        ("2.", "10-09-2025", "Autopsy", "12-19"),
+        ("3.", "17-09-2025", "RegRipper.", "20-23"),
+        ("4.", "24-09-2025", "Guymager", "24-28"),
+        ("5.", "08-10-2025", "Steghide", "29-35"),
+        ("6.", "22-10-2025", "Foremost", "36-38"),
+        ("7.", "22-10-2025", "Scalpel", "39-42"),
     ]
 
     col_widths = [Inches(0.8), Inches(1.3), Inches(3.12), Inches(1.3)]

@@ -1,7 +1,7 @@
 {
   "lab_name": "Lab 5 - Steganography using Steghide",
   "document": "input/lab 5/IDFT Lab 5 Steghide.docx",
-  "total_curated_images": 8,
+  "total_curated_images": 9,
   "dropped_timeline_images": [
     "input/lab 5/images/Screenshot_2026-11-19_11_57_27.png",
     "input/lab 5/images/Screenshot_2026-11-19_11_57_56.png",
@@ -12,7 +12,7 @@
     "input/lab 5/images/Screenshot_2026-11-20_04_40_21.png",
     "input/lab 5/images/Screenshot_2026-11-20_04_49_25.png"
   ],
-  "page_breaks": [24, 41],
+  "page_breaks": [24, 34, 41],
   "images": [
     {
       "after_paragraph_index": 12,
@@ -36,37 +36,44 @@
       "crop": false
     },
     {
+      "after_paragraph_index": 35,
+      "image_path": "input/lab 5/images/Screenshot_steghide_embed_cmd.png",
+      "caption": "Figure 4: Executing steghide embed command in terminal",
+      "page_break_before": false,
+      "crop": false
+    },
+    {
       "after_paragraph_index": 38,
       "image_path": "input/lab 5/images/Screenshot_2026-11-19_12-07-59.png",
-      "caption": "Figure 4: Secret payload embedded into carrier image with passphrase protection",
+      "caption": "Figure 5: Secret payload embedded into carrier image with passphrase protection",
       "page_break_before": false,
       "crop": false
     },
     {
       "after_paragraph_index": 50,
       "image_path": "input/lab 5/images/Screenshot_2026-11-19_12-10-15.png",
-      "caption": "Figure 5: Secret data extracted from carrier image and verified",
+      "caption": "Figure 6: Secret data extracted from carrier image and verified",
       "page_break_before": false,
       "crop": false
     },
     {
       "after_paragraph_index": 63,
       "image_path": "input/lab 5/images/Screenshot_2026-11-20_04-40-26.png",
-      "caption": "Figure 6: Executing steghide info command to query carrier file",
+      "caption": "Figure 7: Executing steghide info command to query carrier file",
       "page_break_before": false,
       "crop": false
     },
     {
       "after_paragraph_index": 66,
       "image_path": "input/lab 5/images/Screenshot_steghide_info.png",
-      "caption": "Figure 7: Steghide info verification displaying embedded file properties",
+      "caption": "Figure 8: Steghide info verification displaying embedded file properties",
       "page_break_before": false,
       "crop": false
     },
     {
       "after_paragraph_index": 70,
       "image_path": "input/lab 5/images/Screenshot_2026-11-20_04-49-32.png",
-      "caption": "Figure 8: Forensic verification confirming SHA-256 integrity match and recovered payload",
+      "caption": "Figure 9: Forensic verification confirming SHA-256 integrity match and recovered payload",
       "page_break_before": false,
       "crop": false
     }

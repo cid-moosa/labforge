@@ -693,8 +693,8 @@ def build_aligned_record(
                 p.paragraph_format.line_spacing = 1.15
                 p.paragraph_format.keep_with_next = True
             elif is_step:
-                p.paragraph_format.space_before = Pt(16)
-                p.paragraph_format.space_after = Pt(12)
+                p.paragraph_format.space_before = Pt(18)
+                p.paragraph_format.space_after = Pt(16)
                 p.paragraph_format.line_spacing = 1.15
                 p.paragraph_format.keep_with_next = True
                 p.paragraph_format.keep_together = True
@@ -764,7 +764,7 @@ def build_aligned_record(
                 elif is_step_2 or aspect >= 1.45:
                     cur_max_w = 5.80
                     cur_max_h = 2.80
-                    cur_space_after = Pt(20)
+                    cur_space_after = Pt(24)
                 elif is_output_img:
                     cur_max_w = 4.80
                     cur_max_h = 2.40
@@ -772,11 +772,11 @@ def build_aligned_record(
                 elif is_page_4_step:
                     cur_max_w = 4.80
                     cur_max_h = 2.30
-                    cur_space_after = Pt(20)
+                    cur_space_after = Pt(24)
                 else:
                     cur_max_w = 4.80
                     cur_max_h = 2.60
-                    cur_space_after = Pt(20)
+                    cur_space_after = Pt(24)
 
                 target_w, target_h = calculate_image_dimensions(
                     w_px, h_px,
@@ -795,7 +795,7 @@ def build_aligned_record(
             img_p.paragraph_format.left_indent = Pt(0)
             img_p.paragraph_format.right_indent = Pt(0)
             img_p.paragraph_format.first_line_indent = Pt(0)
-            img_p.paragraph_format.space_before = Pt(12)
+            img_p.paragraph_format.space_before = Pt(20)
             img_p.paragraph_format.space_after = cur_space_after
             img_p.paragraph_format.line_spacing = 1.0
             img_p.paragraph_format.keep_with_next = False
@@ -822,8 +822,8 @@ def build_aligned_record(
                 cap_p.paragraph_format.left_indent = Pt(0)
                 cap_p.paragraph_format.right_indent = Pt(0)
                 cap_p.paragraph_format.first_line_indent = Pt(0)
-                cap_p.paragraph_format.space_before = Pt(4)
-                cap_p.paragraph_format.space_after = Pt(12)
+                cap_p.paragraph_format.space_before = Pt(5)
+                cap_p.paragraph_format.space_after = Pt(16)
                 cap_run = cap_p.add_run(caption_text)
                 cap_run.italic = True
                 cap_run.font.size = Pt(9.5)

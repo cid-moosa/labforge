@@ -10,7 +10,7 @@ import os
 from typing import Dict, List, Optional, Tuple
 
 LOCKED_ENGINE_FILE = "scripts/labforge_engine.py"
-LOCKED_ENGINE_SHA256 = "75f07f0200c4c173cabf1bbe1f13f34dc298fbd16db668f46f491938c44dedb5"
+LOCKED_ENGINE_SHA256 = "84826ef44f632f63c4ec2aa1c2d68a347b844765f3d2a2990c9b43ac02428ef1"
 BASELINE_ENGINE_SHA256 = LOCKED_ENGINE_SHA256
 
 INPUT_DIR = "input"

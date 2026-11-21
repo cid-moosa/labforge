@@ -46,12 +46,12 @@ STUDENTS = {
 }
 
 LAB_FILES = [
-    ("Practical 1: Exterro FTK Imager (20-08-2025)", "IDFT Lab 1 FTK Imager.pdf"),
-    ("Practical 2: Autopsy (10-09-2025)", "IDFT Lab 2 Autopsy.pdf"),
-    ("Practical 3: RegRipper (17-09-2025)", "IDFT Lab 3 Rig ripper.pdf"),
-    ("Practical 4: Guymager (24-09-2025)", "IDFT Lab 4 Guymager.pdf"),
-    ("Practical 5: Steghide (08-10-2025)", "IDFT Lab 5 Steghide.pdf"),
-    ("Practical 6: File Carving (Foremost, Scalpel) (22-10-2025)", "IDFT Lab 6 File Carving.pdf"),
+    ("Practical 1: Exterro FTK Imager (05-08-2026)", "IDFT Lab 1 FTK Imager.pdf"),
+    ("Practical 2: Autopsy (02-09-2026)", "IDFT Lab 2 Autopsy.pdf"),
+    ("Practical 3: RegRipper (16-09-2026)", "IDFT Lab 3 Rig ripper.pdf"),
+    ("Practical 4: Guymager (23-09-2026)", "IDFT Lab 4 Guymager.pdf"),
+    ("Practical 5: Steghide (07-10-2026)", "IDFT Lab 5 Steghide.pdf"),
+    ("Practical 6: File Carving (Foremost, Scalpel) (28-10-2026)", "IDFT Lab 6 File Carving.pdf"),
 ]
 
 
@@ -127,14 +127,14 @@ def assemble_master_record(student_key: str):
         total_toc = len(toc)
         master_doc.set_toc(toc)
 
-        # 4. Stamp continuous sequential page numbers and practical dates matching Index
+        # 4. Stamp continuous sequential page numbers and practical dates matching date.md & Index
         practical_dates = {
-            4: "20-08-2025",
-            12: "10-09-2025",
-            20: "17-09-2025",
-            24: "24-09-2025",
-            29: "08-10-2025",
-            36: "22-10-2025",
+            4: "05-08-2026",
+            12: "02-09-2026",
+            20: "16-09-2026",
+            24: "23-09-2026",
+            29: "07-10-2026",
+            36: "28-10-2026",
         }
         for p_num in range(4, total_pages + 1):
             page = master_doc[p_num - 1]

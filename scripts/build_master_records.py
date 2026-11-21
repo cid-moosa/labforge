@@ -126,6 +126,33 @@ def assemble_master_record(student_key: str):
         total_pages = len(master_doc)
         total_toc = len(toc)
         master_doc.set_toc(toc)
+
+        # 4. Stamp continuous sequential page numbers and practical dates matching Index
+        practical_dates = {
+            4: "20-08-2025",
+            12: "10-09-2025",
+            20: "17-09-2025",
+            24: "24-09-2025",
+            29: "08-10-2025",
+            36: "22-10-2025",
+        }
+        for p_num in range(4, total_pages + 1):
+            page = master_doc[p_num - 1]
+            rect_pg = fitz.Rect(460, 32, 540, 54)
+            page.add_redact_annot(rect_pg, fill=(1, 1, 1))
+            if p_num == 4:
+                rect_date = fitz.Rect(440, 65, 560, 88)
+                page.add_redact_annot(rect_date, fill=(1, 1, 1))
+            page.apply_redactions()
+
+            pg_str = f"{p_num} | Page"
+            page.insert_text(fitz.Point(475, 48), pg_str, fontname="helv", fontsize=11, color=(0, 0, 0))
+
+            if p_num in practical_dates:
+                date_str = f"Date: {practical_dates[p_num]}"
+                y_pos = 80 if p_num == 4 else 75
+                page.insert_text(fitz.Point(445, y_pos), date_str, fontname="times-bold", fontsize=11, color=(0, 0, 0))
+
         master_doc.save(master_pdf_path, deflate=True)
         master_doc.close()
         print(f"SUCCESS: Generated {master_pdf_path}")

@@ -46,6 +46,7 @@ dependencies = [
 labforge = "scripts.labforge_engine:main"
 labforge-inspect = "scripts.inspect_record:main"
 labforge-verify = "scripts.verify_pdf:main"
+labforge-runner = "labforge.runner:main"
 
 [project.urls]
 Homepage = "https://github.com/cid-moosa/labforge"

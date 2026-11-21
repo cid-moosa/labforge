@@ -321,6 +321,7 @@ def ensure_college_headers_and_footers(docx_path: str) -> Tuple[str, Optional[st
 
     ref_candidates = [
         "output/lab 1/IDFT Lab 1 FTK Imager - Final.docx",
+        "templates/college_record_cover_template.docx",
         "input/lab 1/ftk/IDFT Lab 1 FTK Imager.docx",
         "input/lab 2/IDFT Lab 2 Autopsy.docx",
     ]
@@ -452,6 +453,19 @@ def build_aligned_record(
             if sp is not None:
                 body_sectPr = doc._body._body.find(f"{{{W_NS}}}sectPr")
                 if body_sectPr is not None:
+                    sp_headers = sp.findall(f"{{{W_NS}}}headerReference")
+                    sp_footers = sp.findall(f"{{{W_NS}}}footerReference")
+                    body_headers = body_sectPr.findall(f"{{{W_NS}}}headerReference")
+                    body_footers = body_sectPr.findall(f"{{{W_NS}}}footerReference")
+
+                    # If body_sectPr has headers/footers but sp does not, preserve them into sp
+                    if not sp_headers and body_headers:
+                        for h in body_headers:
+                            sp.append(copy.deepcopy(h))
+                    if not sp_footers and body_footers:
+                        for f in body_footers:
+                            sp.append(copy.deepcopy(f))
+
                     doc._body._body.replace(body_sectPr, copy.deepcopy(sp))
                 pPr.remove(sp)
 
@@ -508,6 +522,23 @@ def build_aligned_record(
             return fmt_el.attrib.get(f"{{{W_NS}}}val", "decimal")
         return "decimal" if ilvl == 0 else "lowerLetter"
 
+    # Lab 2 Step Adjustment: Re-order Ingest modules before Data Source Finish
+    # Ensures every step (including Step 6 & Step 7) has its dedicated screenshot
+    is_autopsy = any("AUTOPSY" in p.text.upper() for p in doc.paragraphs)
+    if is_autopsy:
+        for idx, p in enumerate(doc.paragraphs):
+            txt = p.text.strip()
+            if "Wait for the data source to be processed" in txt:
+                p.text = "Select the required ingest modules and click on Next."
+            elif "After the data source is added to the local database" in txt:
+                p.text = "Wait for the data source to be processed and added to the local database, then click Finish."
+            elif "Select the required ingest modules and click on Next." in txt and idx > 20:
+                p.text = ""
+                if p._p.pPr is not None:
+                    numPr_elem = p._p.pPr.find(f"{{{W_NS}}}numPr")
+                    if numPr_elem is not None:
+                        p._p.pPr.remove(numPr_elem)
+
     # 4. Clean hanging list alignment: left-align all steps cleanly & ensure literal prefixes exist
     step_counter = 0
     bullet_counter = 0
@@ -526,6 +557,24 @@ def build_aligned_record(
             pPr.remove(cs)
         cs_zero = parse_xml(f'<w:contextualSpacing xmlns:w="{W_NS}" w:val="0"/>')
         pPr.append(cs_zero)
+
+        # Remove abnormal right indents that compress paragraphs into narrow vertical columns
+        ind_elem = pPr.find(f"{{{W_NS}}}ind")
+        if ind_elem is not None:
+            r_val = ind_elem.attrib.get(f"{{{W_NS}}}right")
+            if r_val and int(r_val) > 1000:
+                del ind_elem.attrib[f"{{{W_NS}}}right"]
+
+        # Remove negative character spacing in runs that cause glyph compression/overlap
+        for r in p.runs:
+            if r._r.rPr is not None:
+                for sp in r._r.rPr.findall(f"{{{W_NS}}}spacing"):
+                    val = sp.attrib.get(f"{{{W_NS}}}val", "0")
+                    try:
+                        if int(val) < 0:
+                            r._r.rPr.remove(sp)
+                    except ValueError:
+                        pass
 
         numPr = pPr.find(f"{{{W_NS}}}numPr")
         if numPr is not None:
@@ -781,12 +830,14 @@ def build_aligned_record(
                 current_elem.addnext(cap_p._p)
                 current_elem = cap_p._p
 
-    # 8. Remove empty spacer paragraphs between step text and screenshots
+    # 8. Remove empty spacer paragraphs between step text and screenshots, and strip raw template placeholders
     to_remove = []
     for p in doc.paragraphs:
         txt = p.text.strip()
         has_drawing = len(p._p.findall(f".//{{{W_NS}}}drawing")) > 0
         if not txt and not has_drawing:
+            to_remove.append(p._p)
+        elif not has_drawing and re.match(r"^\s*<(?:screenshot|image|photo).*?>\s*$", txt, re.IGNORECASE):
             to_remove.append(p._p)
 
     for p_elem in to_remove:

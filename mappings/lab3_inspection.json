@@ -1,0 +1,103 @@
+{
+  "document": {
+    "path": "input/lab 3/IDFT Lab 3 Rig ripper.docx",
+    "total_non_empty_paragraphs": 13,
+    "paragraphs": [
+      {
+        "paragraph_index": 2,
+        "style": "Body Text",
+        "category": "heading",
+        "text": "AIM: To perform Windows registry analysis and generate a report.",
+        "char_count": 64
+      },
+      {
+        "paragraph_index": 3,
+        "style": "Normal",
+        "category": "heading",
+        "text": "TOOLS USED: Regripper",
+        "char_count": 21
+      },
+      {
+        "paragraph_index": 4,
+        "style": "Normal",
+        "category": "body",
+        "text": "RegRipper",
+        "char_count": 9
+      },
+      {
+        "paragraph_index": 5,
+        "style": "Body Text",
+        "category": "body",
+        "text": "RegRipper is an open-source tool to perform Windows Registry analysis. Windows Registry is a database that contains the default settings, user settings and system defined settings in a Windows system. Registry monitors, observes and records activities performed by the user in the computer.",
+        "char_count": 290
+      },
+      {
+        "paragraph_index": 6,
+        "style": "Heading 2",
+        "category": "body",
+        "text": "Steps",
+        "char_count": 5
+      },
+      {
+        "paragraph_index": 7,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Start the RegRipper application.",
+        "char_count": 32
+      },
+      {
+        "paragraph_index": 12,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Browse and select the hive file you want to analyse.",
+        "char_count": 52
+      },
+      {
+        "paragraph_index": 23,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Browse and select the location where you want to store the final report.",
+        "char_count": 72
+      },
+      {
+        "paragraph_index": 26,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "Click Rip! to start ripping the hive.",
+        "char_count": 37
+      },
+      {
+        "paragraph_index": 31,
+        "style": "List Paragraph",
+        "category": "body",
+        "text": "After the process is complete, click Close. A report file will be created at the location specified earlier.",
+        "char_count": 108
+      },
+      {
+        "paragraph_index": 39,
+        "style": "Heading 2",
+        "category": "body",
+        "text": "Final Report",
+        "char_count": 12
+      },
+      {
+        "paragraph_index": 43,
+        "style": "Normal",
+        "category": "output_heading",
+        "text": "OUTPUT",
+        "char_count": 6
+      },
+      {
+        "paragraph_index": 44,
+        "style": "Body Text",
+        "category": "body",
+        "text": "Successfully performed Windows registry analysis using RegRipper.",
+        "char_count": 65
+      }
+    ]
+  },
+  "screenshots": {
+    "total_found": 0,
+    "catalog": []
+  }
+}

@@ -1,0 +1,172 @@
+#!/usr/bin/env python3
+"""
+scripts/build_master_records.py
+Assembles teacher-grade consolidated Master Lab Records for B.Sc. Cyber Forensics.
+Includes:
+- Page 1: Official Front Cover (GIAL Department of Computer Applications & Cyber Forensics)
+- Page 2: Official Certificate (GIAL Crest Logo, Bonafide declaration, Signatures)
+- Page 3: Official Index Table with required columns: Sl. No., Date, Name of the Tool, Page No., Teacher's Sign
+- Pages 4+: All 6 Practical records (Labs 1 to 6)
+"""
+
+import os
+import sys
+import shutil
+import tempfile
+import docx
+import fitz
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from scripts.labforge_engine import convert_docx_to_pdf
+from scripts.generate_index import generate_index_document
+
+TEMPLATE_DOCX = os.path.join(PROJECT_ROOT, "templates", "college_record_cover_template.docx")
+
+STUDENTS = {
+    "student1": {
+        "display_name": os.getenv("LABFORGE_STUDENT_NAME", "Student Name"),
+        "reg_no": os.getenv("LABFORGE_STUDENT_REGNO", "MG26101A0000"),
+        "output_dir": os.path.join(PROJECT_ROOT, "output", "student1"),
+    },
+}
+
+LAB_FILES = [
+    ("Practical 1: Exterro FTK Imager (20-08-2025)", "IDFT Lab 1 FTK Imager.pdf"),
+    ("Practical 2: Autopsy (10-09-2025)", "IDFT Lab 2 Autopsy.pdf"),
+    ("Practical 3: RegRipper (17-09-2025)", "IDFT Lab 3 Rig ripper.pdf"),
+    ("Practical 4: Guymager (24-09-2025)", "IDFT Lab 4 Guymager.pdf"),
+    ("Practical 5: Steghide (08-10-2025)", "IDFT Lab 5 Steghide.pdf"),
+    ("Practical 6: File Carving (Foremost, Scalpel) (22-10-2025)", "IDFT Lab 6 File Carving.pdf"),
+]
+
+
+def create_cover_and_certificate(student_name: str, reg_no: str, out_pdf_path: str, exam_date: str = ""):
+    """Generates the 2-page Cover and Certificate PDF using the college template."""
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
+        temp_docx = os.path.join(tmpdir, "cover.docx")
+        temp_pdf = os.path.join(tmpdir, "cover.pdf")
+
+        doc = docx.Document(TEMPLATE_DOCX)
+        for p in doc.paragraphs:
+            if "Subject:" in p.text and "…………" in p.text:
+                p.text = "Subject: - Introduction to Digital Forensics"
+                for r in p.runs:
+                    r.font.name = "Calibri"
+                    r.font.size = docx.shared.Pt(11)
+            if "Name:" in p.text and "Reg No:" in p.text:
+                name_str = student_name if student_name else "...................................................."
+                reg_str = reg_no if reg_no else "......................................."
+                p.text = f"Name: {name_str}   Reg No: {reg_str}   Semester: 1"
+                for r in p.runs:
+                    r.font.name = "Calibri"
+                    r.font.size = docx.shared.Pt(11)
+            elif "Certified that this is a Bonafide" in p.text:
+                name_str = student_name if student_name else "............................................................"
+                reg_str = reg_no if reg_no else "............................................................"
+                p.text = (
+                    f"Certified that this is a Bonafide record of practical work done by "
+                    f"Mr./Ms. {name_str} "
+                    f"Reg.No. {reg_str} of First semester "
+                    f"of Bachelor of Science in Cyber forensics during the year 2025 – 2029"
+                )
+                for r in p.runs:
+                    r.font.name = "Calibri"
+                    r.font.size = docx.shared.Pt(11)
+            elif "Submitted for the practical examination" in p.text:
+                date_str = exam_date if exam_date else "........................................."
+                p.text = f"Submitted for the practical examination held on {date_str} at GIAL, Kottayam"
+                for r in p.runs:
+                    r.font.name = "Calibri"
+                    r.font.size = docx.shared.Pt(11)
+
+        doc.save(temp_docx)
+        convert_docx_to_pdf(temp_docx, temp_pdf)
+        shutil.copyfile(temp_pdf, out_pdf_path)
+
+
+def create_index_sheet(student_name: str, reg_no: str, out_pdf_path: str):
+    """Generates the 1-page Index sheet PDF."""
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
+        temp_docx = os.path.join(tmpdir, "index.docx")
+        temp_pdf = os.path.join(tmpdir, "index.pdf")
+        generate_index_document(temp_docx, temp_pdf, student_name=student_name, reg_no=reg_no)
+        shutil.copyfile(temp_pdf, out_pdf_path)
+
+
+def assemble_master_record(student_key: str):
+    """Assembles the consolidated master record PDF for a given student."""
+    cfg = STUDENTS[student_key]
+    out_dir = cfg["output_dir"]
+    name = cfg["display_name"]
+    reg = cfg["reg_no"]
+    master_pdf_path = os.path.join(out_dir, "IDFT Lab Record Master.pdf")
+
+    print(f"\n==========================================")
+    print(f" Assembling Master Record: {name} (Roll/Reg No: {reg})")
+    print(f"==========================================")
+
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
+        cover_pdf = os.path.join(tmpdir, f"{student_key}_cover.pdf")
+        index_pdf = os.path.join(tmpdir, f"{student_key}_index.pdf")
+
+        print("-> Generating Cover & Certificate...")
+        create_cover_and_certificate(name, reg, cover_pdf)
+
+        print("-> Generating Index Sheet...")
+        create_index_sheet(name, reg, index_pdf)
+
+        master_doc = fitz.open()
+        toc = [
+            [1, "Front Cover Page", 1],
+            [1, "Certificate", 2],
+            [1, "Lab Record Index", 3],
+        ]
+
+        # 1. Insert Cover & Certificate (Pages 1 & 2)
+        doc_cover = fitz.open(cover_pdf)
+        master_doc.insert_pdf(doc_cover)
+        doc_cover.close()
+
+        # 2. Insert Index Sheet (Page 3)
+        doc_index = fitz.open(index_pdf)
+        master_doc.insert_pdf(doc_index)
+        doc_index.close()
+
+        # 3. Insert all 6 Practicals
+        page_cursor = 4
+        for title, filename in LAB_FILES:
+            lab_path = os.path.join(out_dir, filename)
+            if not os.path.exists(lab_path):
+                raise FileNotFoundError(f"Missing lab PDF: {lab_path}")
+            doc_lab = fitz.open(lab_path)
+            toc.append([1, title, page_cursor])
+            master_doc.insert_pdf(doc_lab)
+            page_cursor += len(doc_lab)
+            doc_lab.close()
+
+        total_pages = len(master_doc)
+        total_toc = len(toc)
+        master_doc.set_toc(toc)
+        master_doc.save(master_pdf_path, deflate=True)
+        master_doc.close()
+        print(f"SUCCESS: Generated {master_pdf_path}")
+        print(f"Total Pages: {total_pages}, TOC Entries: {total_toc}")
+
+
+def build_all_master_records():
+    for student_key in STUDENTS:
+        assemble_master_record(student_key)
+
+
+if __name__ == "__main__":
+    target = sys.argv[1] if len(sys.argv) > 1 else "all"
+    if target == "all":
+        build_all_master_records()
+    elif target in STUDENTS:
+        assemble_master_record(target)
+    else:
+        print(f"Unknown target: {target}. Choices: {list(STUDENTS.keys())} or 'all'")
+        sys.exit(1)

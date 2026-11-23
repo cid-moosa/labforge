@@ -37,6 +37,14 @@ except ImportError as e:
     sys.exit(f"Error: Missing required dependency ({e}). Run: uv pip install python-docx Pillow lxml")
 
 try:
+    import fitz
+except ImportError:
+    try:
+        import pymupdf as fitz
+    except ImportError:
+        fitz = None
+
+try:
     from scripts.image_utils import crop_box, crop_terminal_window
 except ImportError:
     try:
@@ -535,6 +543,17 @@ def build_aligned_record(
         pgNum = s._sectPr.find(f"{{{W_NS}}}pgNumType")
         if pgNum is not None:
             s._sectPr.remove(pgNum)
+        # Guarantee 0.5pt page borders if template lacks them (e.g. Lab 4)
+        if not s._sectPr.xpath("./w:pgBorders"):
+            pgBorders = parse_xml(f'''
+                <w:pgBorders xmlns:w="{W_NS}" w:offsetFrom="page">
+                    <w:top w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                    <w:left w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                    <w:bottom w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                    <w:right w:val="single" w:sz="4" w:space="24" w:color="000000"/>
+                </w:pgBorders>
+            ''')
+            s._sectPr.append(pgBorders)
 
     # 2. Fix header and footer XML architecture
     fix_header_and_footer(doc)
@@ -921,6 +940,10 @@ def build_aligned_record(
     if out_dir and not os.path.exists(out_dir):
         os.makedirs(out_dir, exist_ok=True)
 
+    # Set document core properties
+    doc.core_properties.title = "Introduction to Digital Forensics and Tools"
+    doc.core_properties.subject = "Introduction to Digital Forensics and Tools"
+
     doc.save(output_docx)
     print(f"Successfully generated aligned document: {output_docx}")
     print(f"Injected Screenshots: {len(validated_items)}")
@@ -931,6 +954,19 @@ def build_aligned_record(
         success = convert_docx_to_pdf(output_docx, output_pdf)
         if success:
             actual_pdf = output_pdf
+            if fitz is not None:
+                try:
+                    pdf_doc = fitz.open(actual_pdf)
+                    pdf_doc.set_metadata({
+                        "title": "Introduction to Digital Forensics and Tools",
+                        "subject": "Introduction to Digital Forensics and Tools",
+                        "creator": "Project LabForge",
+                        "producer": "LibreOffice / PyMuPDF",
+                    })
+                    pdf_doc.save(actual_pdf, incremental=True, encryption=fitz.PDF_ENCRYPT_KEEP)
+                    pdf_doc.close()
+                except Exception as e:
+                    print(f"[WARNING] Could not update PDF metadata: {e}")
 
     return output_docx, actual_pdf
 

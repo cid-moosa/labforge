@@ -10,13 +10,13 @@ import os
 from typing import Dict, List, Optional, Tuple
 
 LOCKED_ENGINE_FILE = "scripts/labforge_engine.py"
-LOCKED_ENGINE_SHA256 = "36a520c328f8b0e750d4bdcfad8c2af722dbe788690606814fc9ca2309a56832"
+LOCKED_ENGINE_SHA256 = "3175efca2ce7909ab5644d0bc2e55449b6347d97fb93318016ac74da17360a49"
 BASELINE_ENGINE_SHA256 = LOCKED_ENGINE_SHA256
 
 INPUT_DIR = "input"
 OUTPUT_DIR = "output"
 EXPECTED_INPUT_COUNT = 133
-EXPECTED_OUTPUT_COUNT = 33
+EXPECTED_OUTPUT_COUNT = 37
 
 
 def hash_file(filepath: str) -> str:

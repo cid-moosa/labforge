@@ -3,12 +3,14 @@
 scripts/verify_pdf.py
 Project LabForge: QA Verification Auditor for Lab Record PDFs.
 
-Audits generated PDFs using PyMuPDF (fitz) against the 4 critical acceptance gates:
+Audits generated PDFs using PyMuPDF (fitz) against the critical acceptance gates:
 1. Zero blank trailing page (no empty pages at the end).
 2. Zero orphaned step text (no procedure step marooned at page bottom without its screenshot).
 3. Sequential page numbering (1 | Page through N | Page without repeating or skipping).
 4. All mapped screenshots present and accounted for across the pages.
-5. Footer single-line integrity (verifies 2025-29 is not wrapped).
+5. Footer single-line integrity (verifies 2026-30 and GIAL Vadavathoor are unbroken on a single line, 0 occurrences of 2025).
+6. Subject header standardization ("Introduction to Digital Forensics and Tools" present in headers).
+7. Page borders (every content page has an outer page border).
 """
 
 import argparse
@@ -25,6 +27,33 @@ except ImportError:
         import pymupdf as fitz
     except ImportError:
         sys.exit("Error: 'pymupdf' is not installed in this environment. Run: uv pip install pymupdf")
+
+
+def check_page_has_border(page: fitz.Page) -> bool:
+    """
+    Checks if a page has a visible outer page border.
+    Requires either a full bounding rectangle (width > 500 and height > 700)
+    or all 4 boundary strokes (top, bottom, left, right).
+    """
+    has_top = False
+    has_bottom = False
+    has_left = False
+    has_right = False
+    for d in page.get_drawings():
+        r = d.get("rect")
+        if not r:
+            continue
+        if r.width > 500 and r.height > 700:
+            return True
+        if r.width > 500 and r.y0 < 35:
+            has_top = True
+        if r.width > 500 and r.y1 > 800:
+            has_bottom = True
+        if r.height > 700 and r.x0 < 35:
+            has_left = True
+        if r.height > 700 and r.x1 > 550:
+            has_right = True
+    return bool(has_top and has_bottom and has_left and has_right)
 
 
 def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
@@ -51,6 +80,8 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
     detected_page_numbers = []
     orphaned_steps = []
     footer_issues = []
+    header_issues = []
+    missing_borders = []
 
     # Regex for step headings/lines
     step_pattern = re.compile(r"^\s*(\d+[\.\)]|[a-d][\.\)])\s+[A-Z]", re.IGNORECASE)
@@ -97,10 +128,26 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
         num_found = int(m_page.group(1)) if m_page else None
         detected_page_numbers.append(num_found)
 
-        # Check footer wrapping
+        # Check subject title in header
+        if "Introduction to Digital Forensics and Tools" not in header_text:
+            header_issues.append(f"Page {page_num}: Header missing 'Introduction to Digital Forensics and Tools' (found: '{header_text.strip()}')")
+
+        # Check footer wrapping and components
         if "2025" in footer_text:
-            if re.search(r"2025[\-‑]\s*\n\s*29", footer_text):
-                footer_issues.append(f"Page {page_num}: 2025-29 wrapped onto two lines.")
+            footer_issues.append(f"Page {page_num}: Obsolete batch year '2025' detected in footer.")
+        if re.search(r"2026[\-‑]\s*\n\s*30", footer_text):
+            footer_issues.append(f"Page {page_num}: '2026-30' wrapped onto two lines.")
+        elif not re.search(r"2026[\-‑]30", footer_text):
+            footer_issues.append(f"Page {page_num}: Missing '2026-30' in footer.")
+
+        if re.search(r"GIAL\s*\n\s*Vadavathoor", footer_text):
+            footer_issues.append(f"Page {page_num}: 'GIAL Vadavathoor' wrapped onto two lines.")
+        elif "GIAL Vadavathoor" not in footer_text:
+            footer_issues.append(f"Page {page_num}: Missing 'GIAL Vadavathoor' in footer.")
+
+        # Check page border
+        if not check_page_has_border(page):
+            missing_borders.append(page_num)
 
         # Check orphaned step:
         # If the page has body text, check the last body block
@@ -118,7 +165,6 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
                     })
         elif body_blocks and page_idx < total_pages - 1:
             # Page has images, check if a step line occurs below the lowest image
-            # Find lowest image position
             img_infos = page.get_image_info()
             if img_infos:
                 lowest_img_y1 = max(info["bbox"][3] for info in img_infos)
@@ -139,7 +185,8 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
             "images_count": img_count,
             "body_blocks_count": len(body_blocks),
             "header_page_num": num_found,
-            "has_body_text": len(body_blocks) > 0
+            "has_body_text": len(body_blocks) > 0,
+            "has_border": page_num not in missing_borders,
         })
 
     # Gate 1: Check Trailing Blank Page
@@ -169,13 +216,24 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
             images_gate_passed = False
             image_count_msg = f"Found {total_images_found} screenshots, expected {expected_image_count} from mapping."
 
+    # Gate 5: Footer Single Line & Components
+    footer_passed = (len(footer_issues) == 0)
+
+    # Gate 6: Subject Header
+    header_passed = (len(header_issues) == 0)
+
+    # Gate 7: Page Borders
+    borders_passed = (len(missing_borders) == 0)
+
     # Overall Verdict
     passed = (
         not is_last_page_blank
         and not has_orphaned_steps
         and is_sequential
         and images_gate_passed
-        and len(footer_issues) == 0
+        and footer_passed
+        and header_passed
+        and borders_passed
     )
 
     return {
@@ -203,8 +261,16 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
                 "details": image_count_msg
             },
             "footer_single_line": {
-                "passed": len(footer_issues) == 0,
+                "passed": footer_passed,
                 "issues": footer_issues
+            },
+            "subject_header": {
+                "passed": header_passed,
+                "issues": header_issues
+            },
+            "page_borders": {
+                "passed": borders_passed,
+                "missing_pages": missing_borders
             }
         },
         "page_breakdown": page_reports
@@ -213,7 +279,7 @@ def audit_pdf(pdf_path: str, mapping_path: str = None) -> Dict[str, Any]:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Project LabForge: Audit lab record PDF against the 5 acceptance gates."
+        description="Project LabForge: Audit lab record PDF against the acceptance gates."
     )
     parser.add_argument(
         "--pdf",
@@ -281,10 +347,24 @@ def main():
     # Gate 5
     g5 = gates["footer_single_line"]
     status5 = "[PASS]" if g5["passed"] else "[FAIL]"
-    print(f"5. Footer Single-Line Format : {status5:<7} (2025‑29 unbroken)")
+    print(f"5. Footer Single-Line Format : {status5:<7} (2026‑30 & GIAL unbroken)")
     if not g5["passed"]:
         for iss in g5["issues"]:
             print(f"   ! {iss}")
+
+    # Gate 6
+    g6 = gates["subject_header"]
+    status6 = "[PASS]" if g6["passed"] else "[FAIL]"
+    print(f"6. Standard Subject Header   : {status6:<7} ('Introduction to Digital Forensics and Tools')")
+    if not g6["passed"]:
+        for iss in g6["issues"]:
+            print(f"   ! {iss}")
+
+    # Gate 7
+    g7 = gates["page_borders"]
+    status7 = "[PASS]" if g7["passed"] else "[FAIL]"
+    border_msg = "All pages bordered" if g7["passed"] else f"Missing on pages {g7['missing_pages']}"
+    print(f"7. Page Borders Present      : {status7:<7} ({border_msg})")
 
     print("-" * 70)
     print(f"OVERALL VERDICT: {report['verdict']}")

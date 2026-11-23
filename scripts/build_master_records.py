@@ -94,6 +94,33 @@ def create_index_sheet(student_name: str, reg_no: str, out_pdf_path: str):
         shutil.copyfile(temp_pdf, out_pdf_path)
 
 
+def check_page_has_border(page: fitz.Page) -> bool:
+    """
+    Checks if a page has a visible outer page border.
+    Requires either a full bounding rectangle (width > 500 and height > 700)
+    or all 4 boundary strokes (top, bottom, left, right).
+    """
+    has_top = False
+    has_bottom = False
+    has_left = False
+    has_right = False
+    for d in page.get_drawings():
+        r = d.get("rect")
+        if not r:
+            continue
+        if r.width > 500 and r.height > 700:
+            return True
+        if r.width > 500 and r.y0 < 35:
+            has_top = True
+        if r.width > 500 and r.y1 > 800:
+            has_bottom = True
+        if r.height > 700 and r.x0 < 35:
+            has_left = True
+        if r.height > 700 and r.x1 > 550:
+            has_right = True
+    return bool(has_top and has_bottom and has_left and has_right)
+
+
 def assemble_master_record(student_key: str):
     """Assembles the consolidated master record PDF for a given student."""
     cfg = STUDENTS[student_key]
@@ -187,9 +214,17 @@ def assemble_master_record(student_key: str):
         # 5. Guarantee thin single page border on every content page (Pages 1 through 42)
         for p_num in range(1, total_pages + 1):
             page = master_doc[p_num - 1]
-            has_border = any(d.get('rect') and d['rect'].width > 500 for d in page.get_drawings())
-            if not has_border:
+            if not check_page_has_border(page):
                 page.draw_rect(fitz.Rect(24.0, 24.0, 571.25, 817.85), color=(0, 0, 0), width=0.5)
+
+        # 6. Enforce document metadata compliance
+        master_doc.set_metadata({
+            "title": "Introduction to Digital Forensics and Tools",
+            "subject": "Introduction to Digital Forensics and Tools",
+            "author": cfg["display_name"],
+            "creator": "Project LabForge",
+            "producer": "LibreOffice / PyMuPDF",
+        })
 
         master_doc.save(master_pdf_path, deflate=True)
         master_doc.close()

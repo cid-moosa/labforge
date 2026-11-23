@@ -102,6 +102,21 @@ Every rule below fixes a real Word/PDF layout bug:
   3. **100% Reversibility**: Original assets in `input/` remain read-only. Setting `"crop": false` in `mapping.json` or passing `--no-crop` to the CLI immediately restores 100% full uncropped images with 1px black borders.
   4. **Code-First Order**: Always build and test cropping code against test fixtures first before regenerating records.
 
+### Rule 9: Faculty Review & 6-Practical Structure Standard
+- **Root Cause:** Separating Scalpel and Foremost into an artificial "Practical 7" directly violated faculty guidelines ("Experimental no 7 entha? Athe veda. 6 ille scalpel and foremost odalo"). Column headers named "NAME OF EXPERIMENT" were rejected in favor of "Name of the Tool". Outdated batch year "2025-29" was flagged.
+- **The Mandatory Fix:**
+  1. **Exact 6 Practicals**: Foremost and Scalpel must remain combined under `PRACTICAL: 6` ("File Carving (Foremost, Scalpel)", Pages 36–42). Never invent Practical 7. Master PDF TOC must have exactly 9 entries (Cover, Certificate, Index, Practicals 1–6).
+  2. **Index Table Specification**: Plain unshaded 4-column table centered on page. Column 3 header MUST be `Name of the Tool`. Headers: `["SI No.", "Date", "Name of the Tool", "Page Number"]`.
+  3. **Official Practical Dates**: 1. FTK Imager (05-08-2026), 2. Autopsy (02-09-2026), 3. RegRipper (16-09-2026), 4. Guymager (23-09-2026), 5. Steghide (07-10-2026), 6. File Carving (Foremost, Scalpel) (28-10-2026).
+  4. **Academic Year & Subject**: Academic batch year is 2026–2030 (`2026\u201130` in footers, `2026 – 2030` on Certificate). Subject title is "Introduction to Digital Forensics and Tools" (IDFT) in headers and document metadata.
+
+### Rule 10: Universal Page Borders and Footer Completeness Standard
+- **Root Cause:** Section 0 continuous section break prevented LibreOffice from rendering page borders on Page 1. Lab 5 (Steghide) had multiple footer parts, causing `GIAL Vadavathoor` to be missing on Pages 29–35. Narrow 86pt footer textboxes caused `GIAL Vadavathoor` to wrap onto two lines (`GIAL \nVadavathoor`) on Page 24.
+- **The Mandatory Fix:**
+  1. **Universal 0.5pt Page Border**: In Cover/Certificate docx, change Section 0 break to `<w:type w:val="nextPage"/>` and add uniform 0.5pt black border (`<w:pgBorders w:offsetFrom="page">` with `sz="4"`, `space="24"`). In PyMuPDF assembly loop, verify every page has an outer border rect.
+  2. **Footer Shape Propagation**: Deep copy the `GIAL Vadavathoor` VML shape into any footer part lacking it, ensuring complete footers across all labs.
+  3. **Anti-Wrap Widths**: Widen `GIAL Vadavathoor` textbox to `width:160pt` (single line) and batch year textbox to `width:55pt` at `margin-left:485pt` with non-breaking hyphen `2026\u201130`.
+
 ---
 
 ## 3. Autonomous Execution Protocol ("/labforge")

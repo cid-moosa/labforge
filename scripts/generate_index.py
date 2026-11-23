@@ -97,19 +97,18 @@ def generate_index_document(output_docx: str, output_pdf: str, student_name: str
     run_title.font.bold = True
     run_title.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
-    # Official practical dates from input/referance/date.md
+    # Official practical dates from input/referance/date.md (Teacher approved)
     practicals = [
-        ("1.", "05-08-2026", "Exterro FTK Imager", "4-11"),
+        ("1.", "05-08-2026", "FTK Imager", "4-11"),
         ("2.", "02-09-2026", "Autopsy", "12-19"),
         ("3.", "16-09-2026", "RegRipper", "20-23"),
         ("4.", "23-09-2026", "Guymager", "24-28"),
         ("5.", "07-10-2026", "Steghide", "29-35"),
-        ("6.", "28-10-2026", "Foremost", "36-38"),
-        ("7.", "28-10-2026", "Scalpel", "39-42"),
+        ("6.", "28-10-2026", "File Carving (Foremost, Scalpel)", "36-42"),
     ]
 
     col_widths = [Inches(0.70), Inches(1.45), Inches(3.05), Inches(1.30)]
-    headers = ["SL No.", "DATE", "NAME OF EXPERIMENT", "PAGE NO"]
+    headers = ["SI No.", "Date", "Name of the Tool", "Page Number"]
 
     table = doc.add_table(rows=len(practicals) + 1, cols=4)
     table.alignment = WD_TABLE_ALIGNMENT.CENTER

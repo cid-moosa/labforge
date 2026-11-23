@@ -47,7 +47,7 @@ STUDENTS = {
 }
 
 LAB_FILES = [
-    ("Practical 1: Exterro FTK Imager (05-08-2026)", "IDFT Lab 1 FTK Imager.pdf"),
+    ("Practical 1: FTK Imager (05-08-2026)", "IDFT Lab 1 FTK Imager.pdf"),
     ("Practical 2: Autopsy (02-09-2026)", "IDFT Lab 2 Autopsy.pdf"),
     ("Practical 3: RegRipper (16-09-2026)", "IDFT Lab 3 Rig ripper.pdf"),
     ("Practical 4: Guymager (23-09-2026)", "IDFT Lab 4 Guymager.pdf"),
@@ -57,17 +57,19 @@ LAB_FILES = [
 
 
 def create_cover_and_certificate(out_pdf_path: str):
-    """Generates the 2-page Cover and Certificate PDF directly from the official college template, standardizing Certificate page borders to thin single border."""
+    """Generates the 2-page Cover and Certificate PDF directly from the official college template, applying uniform 0.5pt black border to both pages."""
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
         temp_docx = os.path.join(tmpdir, "cover.docx")
         temp_pdf = os.path.join(tmpdir, "cover.pdf")
         
         doc = docx.Document(TEMPLATE_DOCX)
-        if len(doc.sections) > 1:
-            sectPr = doc.sections[1]._sectPr
+        for section in doc.sections:
+            sectPr = section._sectPr
             for child in list(sectPr):
-                if child.tag.endswith('pgBorders'):
+                if child.tag.endswith('pgBorders') or child.tag.endswith('type'):
                     sectPr.remove(child)
+            type_el = parse_xml(f'<w:type xmlns:w="{W_NS}" w:val="nextPage"/>')
+            sectPr.append(type_el)
             pgBorders = parse_xml(f'''
                 <w:pgBorders xmlns:w="{W_NS}" w:offsetFrom="page">
                     <w:top w:val="single" w:sz="4" w:space="24" w:color="000000"/>
@@ -138,12 +140,7 @@ def assemble_master_record(student_key: str):
             if not os.path.exists(lab_path):
                 raise FileNotFoundError(f"Missing lab PDF: {lab_path}")
             doc_lab = fitz.open(lab_path)
-            if "File Carving" in filename:
-                # Foremost is 3 pages (pages 36-38), Scalpel is 4 pages (pages 39-42)
-                toc.append([1, "Practical 6: Foremost (28-10-2026)", page_cursor])
-                toc.append([1, "Practical 7: Scalpel (28-10-2026)", page_cursor + 3])
-            else:
-                toc.append([1, title, page_cursor])
+            toc.append([1, title, page_cursor])
             master_doc.insert_pdf(doc_lab)
             page_cursor += len(doc_lab)
             doc_lab.close()
@@ -152,7 +149,7 @@ def assemble_master_record(student_key: str):
         total_toc = len(toc)
         master_doc.set_toc(toc)
 
-        # 4. Stamp continuous sequential page numbers and practical dates matching date.md & Index
+        # 4. Stamp continuous sequential page numbers, practical dates, and standardized subject header
         practical_dates = {
             4: "05-08-2026",
             12: "02-09-2026",
@@ -160,8 +157,16 @@ def assemble_master_record(student_key: str):
             24: "23-09-2026",
             29: "07-10-2026",
             36: "28-10-2026",
-            39: "28-10-2026",
         }
+        for p_num in range(3, total_pages + 1):
+            page = master_doc[p_num - 1]
+            txt = page.get_text()
+            if "Introduction to Digital Forensics" in txt and "and Tools" not in txt:
+                rect_header = fitz.Rect(35, 34, 280, 52)
+                page.add_redact_annot(rect_header, fill=(1, 1, 1))
+                page.apply_redactions()
+                page.insert_text(fitz.Point(36.1, 47.5), "Introduction to Digital Forensics and Tools", fontname="times-roman", fontsize=10.5, color=(0, 0, 0))
+
         for p_num in range(4, total_pages + 1):
             page = master_doc[p_num - 1]
             rect_pg = fitz.Rect(460, 32, 540, 54)
@@ -179,12 +184,8 @@ def assemble_master_record(student_key: str):
                 y_pos = 80 if p_num == 4 else 75
                 page.insert_text(fitz.Point(445, y_pos), date_str, fontname="times-bold", fontsize=11, color=(0, 0, 0))
 
-            if p_num == 39:
-                # Stamp centered PRACTICAL: 7 heading
-                page.insert_text(fitz.Point(235, 75), "PRACTICAL: 7", fontname="times-bold", fontsize=13, color=(0, 0, 0))
-
-        # 5. Guarantee thin single page border on every content page (Pages 2 through 42)
-        for p_num in range(2, total_pages + 1):
+        # 5. Guarantee thin single page border on every content page (Pages 1 through 42)
+        for p_num in range(1, total_pages + 1):
             page = master_doc[p_num - 1]
             has_border = any(d.get('rect') and d['rect'].width > 500 for d in page.get_drawings())
             if not has_border:

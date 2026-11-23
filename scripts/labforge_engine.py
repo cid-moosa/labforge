@@ -142,7 +142,7 @@ def fix_header_and_footer(doc: Document):
                 even_part = doc.part.rels[even_rel_id].target_part
                 def_text = "".join([t.text for t in def_part._element.findall(f".//{{{W_NS}}}t") if t.text]).strip()
                 even_text = "".join([t.text for t in even_part._element.findall(f".//{{{W_NS}}}t") if t.text]).strip()
-                if not def_text and even_text:
+                if (not def_text and even_text) or ("GIAL" not in def_text and "GIAL" in even_text):
                     footers["default"].attrib[f"{{{R_NS}}}id"] = even_rel_id
 
         # Zero right indent on footer paragraphs
@@ -150,6 +150,34 @@ def fix_header_and_footer(doc: Document):
             if ftr is not None:
                 for p in ftr.paragraphs:
                     p.paragraph_format.right_indent = Pt(0)
+
+    # Ensure every footer part has GIAL Vadavathoor shape
+    import copy
+    gial_shape = None
+    for part in doc.part.related_parts.values():
+        if "footer" in part.partname:
+            for s in part._element.findall(".//{urn:schemas-microsoft-com:vml}shape"):
+                txt = "".join(s.itertext())
+                if "GIAL" in txt or "Vadavathoor" in txt:
+                    gial_shape = copy.deepcopy(s)
+                    break
+            if gial_shape is not None:
+                break
+
+    if gial_shape is not None:
+        for part in doc.part.related_parts.values():
+            if "footer" in part.partname:
+                txt = "".join(part._element.itertext())
+                if "GIAL" not in txt and "Vadavathoor" not in txt:
+                    p = part._element.find(f".//{{{W_NS}}}p")
+                    if p is not None:
+                        r = p.find(f".//{{{W_NS}}}r")
+                        if r is None:
+                            r = etree.SubElement(p, f"{{{W_NS}}}r")
+                        pict = r.find(f".//{{{W_NS}}}pict")
+                        if pict is None:
+                            pict = etree.SubElement(r, f"{{{W_NS}}}pict")
+                        pict.append(copy.deepcopy(gial_shape))
 
     # 1. Dynamic PAGE field in headers
     for part in doc.part.related_parts.values():
@@ -199,7 +227,14 @@ def fix_header_and_footer(doc: Document):
                         fld.append(new_r)
                         p.insert(r_idx, fld)
 
-            # Expand width of header title textbox in VML so "Introduction to Digital Forensics" never clips
+            # Standardize subject title in header to "Introduction to Digital Forensics and Tools"
+            for t in root.findall(f".//{{{W_NS}}}t"):
+                if t.text == "Forensics":
+                    t.text = "Forensics and Tools"
+                elif t.text and "Introduction to Digital Forensics" in t.text and "and Tools" not in t.text:
+                    t.text = t.text.replace("Introduction to Digital Forensics", "Introduction to Digital Forensics and Tools")
+
+            # Expand width of header title textbox in VML so "Introduction to Digital Forensics and Tools" never clips
             for shape in root.findall(".//{urn:schemas-microsoft-com:vml}shape"):
                 style = shape.attrib.get("style", "")
                 if "width:132" in style or "margin-left:35pt" in style:
@@ -219,7 +254,7 @@ def fix_header_and_footer(doc: Document):
                             if int(ext.get("cx", 0)) < 2500000:
                                 ext.set("cx", "3200000")
 
-    # 2. Fix 2025-29 single line in footers
+    # 2. Fix GIAL Vadavathoor single-line and 2026-30 batch year in footers
     for part in doc.part.related_parts.values():
         if "footer" in part.partname:
             root = part._element
@@ -229,22 +264,49 @@ def fix_header_and_footer(doc: Document):
                 t_nodes = p.findall(f".//{{{W_NS}}}t")
                 for t in t_nodes:
                     if t.text:
-                        if "GIAL" in t.text and "29" in t.text:
-                            t.text = t.text.replace(" 29", "")
-                        elif "2025" in t.text:
-                            t.text = "2025\u201129"
-                        elif t.text.strip() == "29":
+                        if "GIAL" in t.text and ("29" in t.text or "30" in t.text):
+                            t.text = t.text.replace(" 29", "").replace(" 30", "")
+                        elif "2025" in t.text or "2026" in t.text:
+                            t.text = "2026\u201130"
+                        elif t.text.strip() in ("29", "30"):
                             t.text = ""
 
-            # Expand width of 2025-29 textbox in VML
+            # Standardize GIAL Vadavathoor on a single line with generous width
             for shape in root.findall(".//{urn:schemas-microsoft-com:vml}shape"):
                 style = shape.attrib.get("style", "")
-                if "506" in style or "495" in style or "width:27" in style or "width:38" in style:
+                t_elems = shape.findall(f".//{{{W_NS}}}t")
+                shape_text = "".join([t.text for t in t_elems if t.text])
+                if "GIAL" in shape_text or "Vadavathoor" in shape_text:
+                    new_style = re.sub(r"width:[^;]+", "width:160pt", style)
+                    shape.attrib["style"] = new_style
+                    if t_elems:
+                        t_elems[0].text = "GIAL Vadavathoor"
+                        for t in t_elems[1:]:
+                            t.text = ""
+
+            for a in root.findall(".//{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}anchor"):
+                t_elems = a.findall(f".//{{{W_NS}}}t")
+                a_text = "".join([t.text for t in t_elems if t.text])
+                if "GIAL" in a_text or "Vadavathoor" in a_text:
+                    extent = a.find("{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}extent")
+                    if extent is not None:
+                        extent.set("cx", str(int(160 * 12700)))
+                    for ext in a.findall(".//{http://schemas.openxmlformats.org/drawingml/2006/main}ext"):
+                        ext.set("cx", str(int(160 * 12700)))
+                    if t_elems:
+                        t_elems[0].text = "GIAL Vadavathoor"
+                        for t in t_elems[1:]:
+                            t.text = ""
+
+            # Expand width of 2026-30 textbox in VML
+            for shape in root.findall(".//{urn:schemas-microsoft-com:vml}shape"):
+                style = shape.attrib.get("style", "")
+                if "506" in style or "495" in style or "width:27" in style or "width:38" in style or "485" in style:
                     new_style = re.sub(r"width:[^;]+", "width:55pt", style)
                     new_style = re.sub(r"margin-left:[^;]+", "margin-left:485pt", new_style)
                     shape.attrib["style"] = new_style
 
-            # Expand width of modern wp:anchor
+            # Expand width of modern wp:anchor for 2026-30
             for a in root.findall(".//{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}anchor"):
                 posH = a.find("{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}positionH")
                 if posH is not None:

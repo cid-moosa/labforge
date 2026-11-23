@@ -115,6 +115,17 @@ Every rule below fixes a real Word/PDF layout bug:
   2. **Footer Shape Propagation**: Deep copy the `GIAL Vadavathoor` VML shape into any footer part lacking it, ensuring complete footers across all labs.
   3. **Anti-Wrap Widths**: Widen `GIAL Vadavathoor` textbox to `width:160pt` (single line) and batch year textbox to `width:55pt` at `margin-left:485pt` with non-breaking hyphen `2026\u201130`.
 
+### Bug 11: The Sacred Input Text & Zero AI Generation Standard
+- **What went wrong:** AI subagents previously generated unprompted figure captions (e.g. `Figure 1: ...`, `Fig 14: HTML audit report...`) and rewrote/reordered student procedure steps in Lab 2 Autopsy. The student's source document contained zero figure captions, and rewriting steps introduced discrepancies with the author's original lab notes.
+- **The Mandatory Fix (The Three Permissible Operations):**
+  1. **Strictly Permitted Operations ONLY**:
+     - **Alignment**: Hanging list indents for procedure steps and sub-bullets, centering images, vertical spacing buffers before/after headings, steps, and images.
+     - **Borders**: 0.5pt uniform outer page borders, 1px solid black image borders, unshaded index table grid borders.
+     - **Combination**: Assembling Cover Page, Certificate, Index, and Practicals 1–6 into a master record with continuous page numbering.
+  2. **Absolute Ban on AI Text Generation**: Never generate or hallucinate figure captions under images. Default `"caption": ""` in all `mapping.json` files unless the source document explicitly contained figure captions.
+  3. **Absolute Ban on Text Mutation**: Never rewrite, combine, reorder, or edit body paragraphs, procedure steps, or headings—even if chronological or grammatical mistakes exist in the raw notes.
+  4. **Verbatim Text Parity**: 100% of body text in output documents must match the source `input/` text verbatim.
+
 ---
 
 ## 3. Autonomous Execution Protocol ("Run LabForge")

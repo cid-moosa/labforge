@@ -117,6 +117,14 @@ Every rule below fixes a real Word/PDF layout bug:
   2. **Footer Shape Propagation**: Deep copy the `GIAL Vadavathoor` VML shape into any footer part lacking it, ensuring complete footers across all labs.
   3. **Anti-Wrap Widths**: Widen `GIAL Vadavathoor` textbox to `width:160pt` (single line) and batch year textbox to `width:55pt` at `margin-left:485pt` with non-breaking hyphen `2026\u201130`.
 
+### Rule 11: Zero AI Text Generation & Verbatim Input Parity
+- **Root Cause:** AI agents attempting to "improve" records introduced unprompted figure captions and reordered procedure steps, violating student expectations and risking academic integrity flags.
+- **The Mandatory Fix:**
+  1. **Three Permitted Operations Only**: Only alignment (indents, centering, vertical spacing buffers), borders (0.5pt outer page borders, 1px image borders, table borders), and combination (Cover + Certificate + Index + Practicals 1–6) are permitted.
+  2. **Zero Hallucinated Captions**: All inserted images must have `"caption": ""` in `mapping.json` unless the source `.docx` explicitly included caption text for that figure.
+  3. **Zero Text Mutation**: Never execute text replacement or paragraph merging on procedure steps (e.g. Autopsy Ingest module steps).
+  4. **Verbatim Text Parity**: 100% of body text in output documents must match the source `input/` text verbatim. Run an automated verbatim text parity check during QA auditing to verify that zero foreign text blocks were injected into the document.
+
 ---
 
 ## 3. Autonomous Execution Protocol ("/labforge")

@@ -361,6 +361,24 @@ def audit_master_pdf(pdf_path: str) -> Dict[str, Any]:
         "errors": page_num_errors,
     }
 
+    # Check 10: Zero AI Captions & Verbatim Text Integrity (No hallucinated Figure labels)
+    caption_pages = []
+    for p_idx in range(3, total_pages):
+        page_num = p_idx + 1
+        page = doc[p_idx]
+        text = page.get_text()
+        if re.search(r"\bFig(?:ure)?\s*\d+\s*:", text, re.IGNORECASE):
+            caption_pages.append(page_num)
+
+    if caption_pages:
+        issues.append(f"Pages with AI-generated figure captions: {caption_pages}")
+
+    text_integrity_passed = (len(caption_pages) == 0)
+    checks["zero_ai_captions"] = {
+        "passed": text_integrity_passed,
+        "caption_pages": caption_pages,
+    }
+
     all_passed = (
         p_count_pass
         and toc_passed
@@ -371,6 +389,7 @@ def audit_master_pdf(pdf_path: str) -> Dict[str, Any]:
         and batch_year_passed
         and footers_passed
         and pagination_passed
+        and text_integrity_passed
     )
 
     return {
@@ -464,6 +483,10 @@ def main():
     # 9. Sequential Pagination
     s9 = "[PASS]" if c["sequential_pagination"]["passed"] else "[FAIL]"
     print(f"9. Sequential Header Pagination    : {s9:<7} (Continuous 3 | Page to 42 | Page)")
+
+    # 10. Zero AI Captions
+    s10 = "[PASS]" if c.get("zero_ai_captions", {}).get("passed", True) else "[FAIL]"
+    print(f"10. Zero AI Captions & Text Parity : {s10:<7} (Zero unprompted Figure labels)")
 
     print("-" * 76)
     print(f"OVERALL VERDICT: {report['verdict']}")

@@ -12,43 +12,43 @@
     {
       "after_paragraph_index": 7,
       "image_path": "input/lab 3/images/1_regripper_main.png",
-      "caption": "Figure 1: RegRipper v.3.0 main application window",
+      "caption": "",
       "crop": false
     },
     {
       "after_paragraph_index": 12,
       "image_path": "input/lab 3/images/2_open_hive_file.jpg",
-      "caption": "Figure 2: Selecting Windows SYSTEM registry hive file",
+      "caption": "",
       "crop": false
     },
     {
       "after_paragraph_index": 23,
       "image_path": "input/lab 3/images/3_save_report_file.png",
-      "caption": "Figure 3: Configuring destination path for output report",
+      "caption": "",
       "crop": false
     },
     {
       "after_paragraph_index": 26,
       "image_path": "input/lab 3/images/4_ready_to_rip.png",
-      "caption": "Figure 4: RegRipper interface configured and ready to parse hive",
+      "caption": "",
       "crop": false
     },
     {
       "after_paragraph_index": 31,
       "image_path": "input/lab 3/images/5_ripping_done.png",
-      "caption": "Figure 5: Hive ripping completed with zero plugin errors",
+      "caption": "",
       "crop": false
     },
     {
       "after_paragraph_index": 39,
       "image_path": "input/lab 3/images/7_report_txt.jpg",
-      "caption": "Figure 6: Generated RegRipper examination report displaying parsed registry artifacts",
+      "caption": "",
       "crop": false
     },
     {
       "after_paragraph_index": 44,
       "image_path": "input/lab 3/images/6_output_directory.png",
-      "caption": "Figure 7: Output directory containing generated report and log files",
+      "caption": "",
       "crop": false
     }
   ]

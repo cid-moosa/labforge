@@ -603,23 +603,6 @@ def build_aligned_record(
             return fmt_el.attrib.get(f"{{{W_NS}}}val", "decimal")
         return "decimal" if ilvl == 0 else "lowerLetter"
 
-    # Lab 2 Step Adjustment: Re-order Ingest modules before Data Source Finish
-    # Ensures every step (including Step 6 & Step 7) has its dedicated screenshot
-    is_autopsy = any("AUTOPSY" in p.text.upper() for p in doc.paragraphs)
-    if is_autopsy:
-        for idx, p in enumerate(doc.paragraphs):
-            txt = p.text.strip()
-            if "Wait for the data source to be processed" in txt:
-                p.text = "Select the required ingest modules and click on Next."
-            elif "After the data source is added to the local database" in txt:
-                p.text = "Wait for the data source to be processed and added to the local database, then click Finish."
-            elif "Select the required ingest modules and click on Next." in txt and idx > 20:
-                p.text = ""
-                if p._p.pPr is not None:
-                    numPr_elem = p._p.pPr.find(f"{{{W_NS}}}numPr")
-                    if numPr_elem is not None:
-                        p._p.pPr.remove(numPr_elem)
-
     # 4. Clean hanging list alignment: left-align all steps cleanly & ensure literal prefixes exist
     step_counter = 0
     bullet_counter = 0

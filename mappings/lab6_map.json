@@ -7,82 +7,87 @@
     "input/lab 6/Screenshot_2026-11-18_04_23_50.png",
     "input/lab 6/Screenshot_2026-11-18_04_52_40.png"
   ],
-  "page_breaks": [20, 36, 52, 60],
+  "page_breaks": [
+    20,
+    36,
+    52,
+    60
+  ],
   "images": [
     {
       "after_paragraph_index": 12,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_15_09.png",
-      "caption": "Figure 1: Kali Linux Terminal launched",
+      "caption": "",
       "page_break_before": false,
       "crop": false
     },
     {
       "after_paragraph_index": 24,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_15_13.png",
-      "caption": "Figure 2: Storage devices identified using lsblk command",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 29,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_16_36.png",
-      "caption": "Figure 3: Foremost data carving command initiated for JPG and PNG formats",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 30,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_23_40.png",
-      "caption": "Figure 4: Foremost output directory with carved file folders and audit log",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 34,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_23_59.png",
-      "caption": "Figure 5: Foremost audit report displaying recovered files and offsets",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 38,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_52_19.png",
-      "caption": "Figure 6: Opening Scalpel configuration file in nano editor",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 47,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_52_34.png",
-      "caption": "Figure 7: Scalpel configuration file edited to enable JPG and PNG carving rules",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 53,
       "image_path": "input/lab 6/Screenshot_2026-11-18_04_53_14.png",
-      "caption": "Figure 8: Scalpel command executed for raw device data recovery",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 55,
       "image_path": "input/lab 6/Screenshot_2026-11-18_05_01_27.png",
-      "caption": "Figure 9: Scalpel pass execution completed and carve list generated",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 55,
       "image_path": "input/lab 6/Screenshot_2026-11-18_05_03_30.png",
-      "caption": "Figure 10: Recovered image files inside Scalpel output folder",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     },
     {
       "after_paragraph_index": 62,
       "image_path": "input/lab 6/Screenshot_2026-11-18_05_03_39.png",
-      "caption": "Figure 11: Scalpel audit log confirming successful data recovery completion",
+      "caption": "",
       "page_break_before": false,
       "crop": "auto_terminal"
     }

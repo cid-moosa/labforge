@@ -5,54 +5,59 @@
   "dropped_timeline_images": [
     "input/lab 4/guymager images/Screenshot_2026-10-19_05_37_21.png"
   ],
-  "page_breaks": [8, 15, 22, 29],
+  "page_breaks": [
+    8,
+    15,
+    22,
+    29
+  ],
   "images": [
     {
       "after_paragraph_index": 6,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_36_09.png",
-      "caption": "Figure 1: Kali Linux Terminal opened",
+      "caption": "",
       "page_break_before": false
     },
     {
       "after_paragraph_index": 8,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_37_30.png",
-      "caption": "Figure 2: Guymager GUI launched as root",
+      "caption": "",
       "page_break_before": false
     },
     {
       "after_paragraph_index": 12,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_39_02.png",
-      "caption": "Figure 3: Evidence storage device (/dev/sdb) identified",
+      "caption": "",
       "page_break_before": false
     },
     {
       "after_paragraph_index": 18,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_40_08.png",
-      "caption": "Figure 4: Acquire Image configuration dialog with metadata and destination folder",
+      "caption": "",
       "page_break_before": false
     },
     {
       "after_paragraph_index": 20,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_40_17.png",
-      "caption": "Figure 5: Image acquisition process initiated",
+      "caption": "",
       "page_break_before": false
     },
     {
       "after_paragraph_index": 22,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_49_17.png",
-      "caption": "Figure 6: Forensic image acquisition completed and verified",
+      "caption": "",
       "page_break_before": false
     },
     {
       "after_paragraph_index": 26,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_49_59.png",
-      "caption": "Figure 7: Acquired E01 image segments and .info metadata file in destination directory",
+      "caption": "",
       "page_break_before": false
     },
     {
       "after_paragraph_index": 30,
       "image_path": "input/lab 4/guymager images/Screenshot_2026-10-19_05_51_28.png",
-      "caption": "Figure 8: Guymager acquisition info file displaying MD5 integrity hashes and verification status",
+      "caption": "",
       "page_break_before": false
     }
   ]

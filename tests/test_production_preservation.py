@@ -66,7 +66,7 @@ class TestProductionPreservation(unittest.TestCase):
 
         with open(LOCKED_ENGINE_FILE, "r", encoding="utf-8") as f:
             lines = f.readlines()
-        self.assertEqual(len(lines), 1029, f"Expected 1029 lines in {LOCKED_ENGINE_FILE}, found {len(lines)}")
+        self.assertEqual(len(lines), 1012, f"Expected 1012 lines in {LOCKED_ENGINE_FILE}, found {len(lines)}")
 
         current_hash = hash_file(LOCKED_ENGINE_FILE)
         self.assertEqual(
